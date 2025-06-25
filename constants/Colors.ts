@@ -14,6 +14,11 @@ export const Colors = {
     icon: '#687076',
     tabIconDefault: '#687076',
     tabIconSelected: tintColorLight,
+    acikKrem: '#f3eee7',
+    kahverengi :'#c2b6a3',
+    koyuKahverengi: '#6c584c',
+    acikKahverengi: '#d4c2b3',
+    griKahve:'#a3917b'
   },
   dark: {
     text: '#ECEDEE',
@@ -22,5 +27,10 @@ export const Colors = {
     icon: '#9BA1A6',
     tabIconDefault: '#9BA1A6',
     tabIconSelected: tintColorDark,
+    acikKrem: '#1e1b18', //bg
+    kahverengi :'#a89984', //accent,
+    koyuKahverengi: '#e6d4c4', //primaryText
+    acikKahverengi: '#3d352f', //card bg
+    griKahve:'#7a6f63' //secondaryText
   },
 };
