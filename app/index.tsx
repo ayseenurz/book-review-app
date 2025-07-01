@@ -1,6 +1,9 @@
-import { Text, View } from "react-native";
+import { router } from "expo-router";
+import React from "react";
+import { Pressable, Text, View } from "react-native";
+import { Colors } from "react-native/Libraries/NewAppScreen";
 
-export default function Index() {
+export default function App() {
   return (
     <View
       style={{
@@ -9,7 +12,19 @@ export default function Index() {
         alignItems: "center",
       }}
     >
-      <Text>Edit app/index.tsx to edit this screen.</Text>
+      <View>
+        <Pressable
+          onPress={() => router.push("/(tabs)/home")}
+          style={{
+            marginBottom: 50,
+            backgroundColor: Colors.PRIMARY,
+            padding: 20,
+            borderRadius: 30,
+          }}
+        >
+          <Text>Haydi Başlayalım</Text>
+        </Pressable>
+      </View>
     </View>
   );
 }

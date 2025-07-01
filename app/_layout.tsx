@@ -1,11 +1,12 @@
 import {
-  DarkTheme,
-  DefaultTheme,
-  ThemeProvider,
+    DarkTheme,
+    DefaultTheme,
+    ThemeProvider,
 } from "@react-navigation/native";
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
+import { SearchResultsProvider } from '../components/SearchResultsContext';
 import { useColorScheme } from "../hooks/useColorScheme";
 
 export default function RootLayout() {
@@ -19,13 +20,20 @@ export default function RootLayout() {
     return null;
   }
   return (
-    <ThemeProvider value={colorScheme === 'light' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="+not-found" />
-      </Stack>
-      <StatusBar style="auto" />
-      {/* Ensure that the StatusBar is always visible */}
-    </ThemeProvider>
+    <SearchResultsProvider>
+      <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
+        <Stack
+          screenOptions={{
+            headerShown: false,
+          }}
+        >
+          <Stack.Screen name="(tabs)" />
+          <Stack.Screen name="index" />
+          <Stack.Screen name="+not-found" />
+        </Stack>
+        <StatusBar style="auto" />
+        {/* Ensure that the StatusBar is always visible */}
+      </ThemeProvider>
+    </SearchResultsProvider>
   );
 }

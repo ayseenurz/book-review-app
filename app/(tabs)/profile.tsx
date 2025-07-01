@@ -1,11 +1,11 @@
-import { View, Text } from 'react-native'
 import React from 'react'
+import { SafeAreaView, Text, View } from 'react-native'
 
 const Profile = () => {
   return (
-    <View>
+    <SafeAreaView>
       <Text>Profile</Text>
-    </View>
+    </SafeAreaView>
   )
 }
 
