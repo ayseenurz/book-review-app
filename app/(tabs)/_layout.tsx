@@ -36,7 +36,7 @@ const TabLayout = () => {
       <Tabs.Screen
         name="home"
         options={{
-          title: "Home",
+          title: "Anasayfa",
           tabBarIcon: ({ focused }: { focused: boolean }) => (
             <IconSymbol name="house.fill" color={focused ? Colors.light.koyuKahverengi : Colors.light.kahverengi} />
           ),
@@ -45,7 +45,7 @@ const TabLayout = () => {
       <Tabs.Screen
         name="explore"
         options={{
-          title: "Explore",
+          title: "Keşfet",
           tabBarIcon: ({ focused }: { focused: boolean }) => (
             <IconSymbol name="magnifyingglass" color={focused ? Colors.light.koyuKahverengi : Colors.light.kahverengi} />
           ),
@@ -54,7 +54,7 @@ const TabLayout = () => {
       <Tabs.Screen
         name="bookmark"
         options={{
-          title: "Favorites",
+          title: "Favoriler",
           tabBarIcon: ({ focused }: { focused: boolean }) => (
             <IconSymbol name="bookmark.fill" color={focused ? Colors.light.koyuKahverengi : Colors.light.kahverengi} />
           ),
@@ -63,7 +63,7 @@ const TabLayout = () => {
       <Tabs.Screen
         name="profile"
         options={{
-          title: "Profile",
+          title: "Profil",
           tabBarIcon: ({ focused }: { focused: boolean }) => (
             <IconSymbol name="person.fill" color={focused ? Colors.light.koyuKahverengi : Colors.light.kahverengi} />
           ),

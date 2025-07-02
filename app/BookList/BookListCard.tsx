@@ -16,7 +16,7 @@ type BookListCardProps = {
 
 const BookListCard: React.FC<BookListCardProps> = ({ book }) => {
   const router = useRouter();
-  console.log("BookListCard book:", JSON.stringify(book));
+  /*console.log("BookListCard book:", JSON.stringify(book));*/
   // Eğer volumeInfo yoksa book'un kendisini kullan
   const volume = book.volumeInfo || book;
   return (
@@ -48,10 +48,11 @@ const styles = StyleSheet.create({
   card: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#fff",
+    backgroundColor: "#f5f5f5",
     borderRadius: 8,
     padding: 10,
     marginVertical: 6,
+    marginHorizontal: 16,
     shadowColor: "#000",
     shadowOpacity: 0.1,
     shadowRadius: 4,

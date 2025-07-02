@@ -78,7 +78,7 @@ const BookOfThisMonth: React.FC = () => {
   if (loading) return <ActivityIndicator size="large" style={{ marginTop: 20 }} />;
 
   // FlatList'e gönderilen kitapları kontrol etmek için log ekle
-  console.log('BookOfThisMonth displayedBooks:', displayedBooks);
+  /*console.log('BookOfThisMonth displayedBooks:', displayedBooks);*/
 
   return (
     <View style={styles.container}>

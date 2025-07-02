@@ -31,7 +31,7 @@ const BookDetail = () => {
       });
   }, [bookid]);
 
-  // DEBUG: book ve volume değiştiğinde console.log ile yazdır
+  /*// DEBUG: book ve volume değiştiğinde console.log ile yazdır
   React.useEffect(() => {
     if (book) {
       console.log('book:', JSON.stringify(book, null, 2));
@@ -39,7 +39,7 @@ const BookDetail = () => {
         console.log('volume:', book.volumeInfo);
       }
     }
-  }, [book]);
+  }, [book]);*/
 
   if (loading) return <ActivityIndicator style={{ marginTop: 32 }} size="large" />;
   if (error || !book) return <Text style={{ color: 'red', marginTop: 32 }}>{error || 'Kitap bulunamadı.'}</Text>;

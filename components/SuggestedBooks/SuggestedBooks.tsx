@@ -22,7 +22,9 @@ const SuggestedBooks: React.FC = () => {
     fetch("https://www.googleapis.com/books/v1/volumes?q=fiction")
       .then((res) => res.json())
       .then((data) => {
-        setBooks(data.items || []);
+        // Kitapları rastgele karıştır
+        const shuffle = (arr: any[]) => arr.sort(() => Math.random() - 0.5);
+        setBooks(shuffle(data.items || []));
       })
       .catch((error) => console.error("API hatası:", error))
       .finally(() => setLoading(false));
@@ -31,7 +33,7 @@ const SuggestedBooks: React.FC = () => {
   if (loading) return <ActivityIndicator style={{ marginTop: 20 }} />;
 
   // FlatList'e gönderilen kitapları kontrol etmek için log ekle
-  console.log('SuggestedBooks books:', books);
+  /*console.log('SuggestedBooks books:', books);*/
 
   return (
     <TouchableOpacity style={styles.container} onPress={() => router.push("/book-detail/1")}>
@@ -43,7 +45,7 @@ const SuggestedBooks: React.FC = () => {
         keyExtractor={(item) => item.id}
         showsHorizontalScrollIndicator={false}
         renderItem={({ item }) => {
-          console.log('SuggestedBooks renderItem:', item);
+          /*console.log('SuggestedBooks renderItem:', item);*/
           return (
             <SuggestedBooksCard
               title={item.volumeInfo.title}

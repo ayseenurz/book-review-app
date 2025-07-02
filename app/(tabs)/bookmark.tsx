@@ -54,10 +54,7 @@ const Bookmark = () => {
     loadBookmarks();
   }, []);
 
-  // DEBUG: Favoriler güncellendiğinde logla
-  useEffect(() => {
-    console.log('Bookmark sayfası bookmarks:', bookmarks);
-  }, [bookmarks]);
+
 
   return (
     <SafeAreaView style={{ flex: 1, padding: 16 }}>

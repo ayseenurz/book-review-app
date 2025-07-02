@@ -40,7 +40,7 @@ const PopularAuthors: React.FC = () => {
           horizontal
           showsHorizontalScrollIndicator={false}
           renderItem={({ item, index }) => {
-            console.log('PopularAuthors renderItem:', item);
+            /*console.log('PopularAuthors renderItem:', item);*/
             return (
               <TouchableOpacity onPress={() => router.push(`/search/${encodeURIComponent('author:' + item)}`)}>
                 <PopularAuthorsCard name={item} backgroundColor={colors[index % colors.length]} />
@@ -57,14 +57,13 @@ const PopularAuthors: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: 24,
     paddingHorizontal: 16,
   },
   title: {
     alignContent: "flex-start",
     fontSize: 20,
     fontWeight: "700",
-    marginBottom: 12,
+    margin: 12,
     color: "#222",
   },
 });
