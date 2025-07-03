@@ -1,6 +1,5 @@
-import { router } from "expo-router";
 import React from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 
 interface AuthorCardProps {
   name: string;
@@ -9,12 +8,9 @@ interface AuthorCardProps {
 
 const PopularAuthorsCard: React.FC<AuthorCardProps> = ({ name, backgroundColor = "#f5f5f5" }) => {
   return (
-    <TouchableOpacity
-      style={[styles.card, { backgroundColor }]}
-      onPress={() => router.push(`/search/${encodeURIComponent(name)}`)}
-    >
+    <View style={[styles.card, { backgroundColor }]}>
       <Text style={styles.text}>{name}</Text>
-    </TouchableOpacity>
+    </View>
   );
 };
 

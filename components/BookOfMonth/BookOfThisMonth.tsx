@@ -93,11 +93,11 @@ const BookOfThisMonth: React.FC = () => {
         contentContainerStyle={{ paddingRight: 16 }}
         renderItem={({ item }) => (
           <BookOfThisMonthCard
+            id={item.id}
             title={item.volumeInfo.title}
             authors={item.volumeInfo.authors}
             thumbnail={item.volumeInfo.imageLinks?.thumbnail}
             publishedDate={item.volumeInfo.publishedDate}
-            id={item.id}
           />
         )}
         initialNumToRender={5}

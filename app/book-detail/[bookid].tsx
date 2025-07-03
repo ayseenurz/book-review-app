@@ -50,15 +50,13 @@ const BookDetail = () => {
   // DEBUG: Gelen verileri ekrana yazdır
   return (
     <SafeAreaView>
-      <Text selectable style={{ fontSize: 10, color: '#888', margin: 8 }}>book: {JSON.stringify(book, null, 2)}</Text>
-      <Text selectable style={{ fontSize: 10, color: '#888', margin: 8 }}>volume: {JSON.stringify(volume, null, 2)}</Text>
       <Intro
         title={volume.title}
         author={volume.authors?.join(', ') || 'Bilinmeyen yazar'}
         description={volume.description || ''}
         thumbnail={volume.imageLinks?.thumbnail}
       />
-      <Features />
+      <Features volume={volume} />
     </SafeAreaView>
   )
 }

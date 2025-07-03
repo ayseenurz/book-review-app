@@ -1,4 +1,4 @@
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { ActivityIndicator, FlatList, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import PopularAuthorsCard from "./PopularAuthorsCard";
@@ -28,7 +28,7 @@ const PopularAuthors: React.FC = () => {
   }
   const colors = ["#a3917b", "#6c584c", "#c2b6a3", "#a89984", "#7a6f63"];
 
-  console.log('PopularAuthors authors:', authors);
+  /*console.log('PopularAuthors authors:', authors);*/
 
   return (
     <View>
@@ -42,7 +42,7 @@ const PopularAuthors: React.FC = () => {
           renderItem={({ item, index }) => {
             /*console.log('PopularAuthors renderItem:', item);*/
             return (
-              <TouchableOpacity onPress={() => router.push(`/search/${encodeURIComponent('author:' + item)}`)}>
+              <TouchableOpacity onPress={() => router.push(`/author-detail/${encodeURIComponent(item)}`)}>
                 <PopularAuthorsCard name={item} backgroundColor={colors[index % colors.length]} />
               </TouchableOpacity>
             );

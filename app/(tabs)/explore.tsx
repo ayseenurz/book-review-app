@@ -91,9 +91,12 @@ const Explore = () => {
   useFocusEffect(
     React.useCallback(() => {
       return () => {
-        setResults([]);
+        // Sadece arama kutusu boşsa sonuçları temizle
+        if (!search.trim() && !inputValue.trim()) {
+          setResults([]);
+        }
       };
-    }, [setResults])
+    }, [setResults, search, inputValue])
   );
 
   return (

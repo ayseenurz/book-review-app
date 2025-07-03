@@ -1,3 +1,4 @@
+import { Colors } from "@/constants/Colors";
 import { useRouter } from "expo-router";
 import React from "react";
 import {
@@ -48,7 +49,7 @@ const styles = StyleSheet.create({
   card: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#f5f5f5",
+    backgroundColor: Colors.light.acikKrem,
     borderRadius: 8,
     padding: 10,
     marginVertical: 6,

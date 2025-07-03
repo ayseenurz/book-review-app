@@ -41,6 +41,7 @@ const styles = StyleSheet.create({
     height: 200,
     width: 180,
     margin: 16,
+    backgroundColor: Colors.light.acikKrem,
     paddingVertical: 28,
     paddingHorizontal: 12,
     borderRadius: 12,

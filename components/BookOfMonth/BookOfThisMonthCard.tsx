@@ -31,7 +31,10 @@ const addToBookmarks = async (book: any) => {
 const BookOfThisMonthCard: React.FC<BookCardProps> = ({ title, authors, thumbnail, publishedDate, id }) => {
   const [bookmarked, setBookmarked] = React.useState(false);
   return (
-    <TouchableOpacity style={[styles.card, { width: screenWidth - 64 }]} onPress={() => router.push(`/book-detail/${id}`)}>
+    <TouchableOpacity
+      style={[styles.card, { width: screenWidth - 64 }]}
+      onPress={() => router.push(`/book-detail/${id}`)}
+    >
       {thumbnail && <Image source={{ uri: thumbnail }} style={styles.image} />}
       <View style={styles.info}>
         <Text style={styles.title}>{title}</Text>
