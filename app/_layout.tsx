@@ -1,13 +1,36 @@
 import {
-    DarkTheme,
-    DefaultTheme,
-    ThemeProvider,
+  DarkTheme,
+  DefaultTheme,
+  ThemeProvider,
 } from "@react-navigation/native";
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
-import { SearchResultsProvider } from '../components/SearchResultsContext';
+import { SearchResultsProvider } from "../components/SearchResultsContext";
 import { useColorScheme } from "../hooks/useColorScheme";
+import * as SecureStore from "expo-secure-store";
+import { ClerkProvider, SignedIn, SignedOut } from "@clerk/clerk-expo";
+import LoginScreen from "@/components/LoginScreen";
+
+
+const tokenCache = {
+  async getToken(key: string) {
+    try {
+      return await SecureStore.getItemAsync(key);
+    } catch (error) {
+      console.error("Error fetching token:", error);
+      return null;
+    }
+  },
+  async saveToken(key: string, value: string) {
+    try {
+      await SecureStore.setItemAsync(key, value);
+    } catch (error) {
+      console.error("Error saving token:", error);
+    }
+  },
+};
+
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
@@ -20,20 +43,29 @@ export default function RootLayout() {
     return null;
   }
   return (
-    <SearchResultsProvider>
-      <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-        <Stack
-          screenOptions={{
-            headerShown: false,
-          }}
+    <ClerkProvider publishableKey={process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY!} tokenCache={tokenCache}>
+      <SearchResultsProvider>
+        <ThemeProvider
+          value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
         >
-          <Stack.Screen name="(tabs)" />
-          <Stack.Screen name="index" />
-          <Stack.Screen name="+not-found" />
-        </Stack>
-        <StatusBar style="auto" />
-        {/* Ensure that the StatusBar is always visible */}
-      </ThemeProvider>
-    </SearchResultsProvider>
+          <SignedIn>
+            <Stack
+              screenOptions={{
+                headerShown: false,
+              }}
+            >
+              <Stack.Screen name="(tabs)" />
+              <Stack.Screen name="index" />
+              <Stack.Screen name="+not-found" />
+            </Stack>
+            <StatusBar style="auto" />
+          </SignedIn>
+          <SignedOut>
+            <LoginScreen />
+          </SignedOut>
+          {/* Ensure that the StatusBar is always visible */}
+        </ThemeProvider>
+      </SearchResultsProvider>
+    </ClerkProvider>
   );
 }

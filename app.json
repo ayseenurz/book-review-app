@@ -1,11 +1,11 @@
-  {
+{
   "expo": {
-    "name": "Kitaplar",
-    "slug": "Kitaplar",
+    "name": "book-review-app",
+    "slug": "book-review-app",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "myfirstapp",
+    "scheme": "book-review-app",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
@@ -17,15 +17,22 @@
         "foregroundImage": "./assets/images/icon.png",
         "backgroundColor": "#ffffff"
       },
+      "package": "com.ayseenurz.MyFirstApp",
       "edgeToEdgeEnabled": true
     },
     "web": {
       "bundler": "metro",
-      "output": "static",
+      "output": "server",
       "favicon": "./assets/images/icon.png"
     },
     "plugins": [
       "expo-router",
+      [
+        "@react-native-google-signin/google-signin",
+        {
+          "iosUrlScheme": "com.googleusercontent.apps.435150017838-pa7c4kt87hb0s5iljnm5cjf783d52ppv"
+        }
+      ],
       [
         "expo-splash-screen",
         {
@@ -35,7 +42,9 @@
           "backgroundColor": "#ffffff"
         }
       ],
-      "expo-font"
+      "expo-font",
+      "expo-web-browser",
+      "expo-secure-store"
     ],
     "experiments": {
       "typedRoutes": true
