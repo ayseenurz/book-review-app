@@ -1,7 +1,10 @@
-import { router, useLocalSearchParams } from "expo-router";
+import { router } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { ActivityIndicator, FlatList, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import PopularAuthorsCard from "./PopularAuthorsCard";
+
+
+
 
 const PopularAuthors: React.FC = () => {
   const [authors, setAuthors] = useState<string[]>([]);
@@ -20,7 +23,9 @@ const PopularAuthors: React.FC = () => {
         setAuthors(Array.from(authorSet).slice(0, 10));
       })
       .catch((error) => console.error("API hatası:", error))
-      .finally(() => setLoading(false));
+      .finally(() => {
+        setLoading(false);
+      });
   }, []);
 
   if (loading) {
@@ -39,14 +44,11 @@ const PopularAuthors: React.FC = () => {
           keyExtractor={(item, index) => `${item}-${index}`}
           horizontal
           showsHorizontalScrollIndicator={false}
-          renderItem={({ item, index }) => {
-            /*console.log('PopularAuthors renderItem:', item);*/
-            return (
-              <TouchableOpacity onPress={() => router.push(`/author-detail/${encodeURIComponent(item)}`)}>
-                <PopularAuthorsCard name={item} backgroundColor={colors[index % colors.length]} />
-              </TouchableOpacity>
-            );
-          }}
+          renderItem={({ item, index }) => (
+            <TouchableOpacity onPress={() => router.push(`/author-detail/${encodeURIComponent(item)}`)}>
+              <PopularAuthorsCard name={item} backgroundColor={colors[index % colors.length]} />
+            </TouchableOpacity>
+          )}
           contentContainerStyle={{ paddingBottom: 20 }}
         />
       </View>

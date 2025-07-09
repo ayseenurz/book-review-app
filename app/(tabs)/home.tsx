@@ -1,22 +1,24 @@
-import {
-  Image,
-  SafeAreaView,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
-import React from "react";
 import BookOfThisMonth from "@/components/BookOfMonth/BookOfThisMonth";
 import Header from "@/components/Header/Header";
 import PopularAuthors from "@/components/PopularAuthors/PopularAuthors";
 import SuggestedBooks from "@/components/SuggestedBooks/SuggestedBooks";
+import React, { useEffect, useState } from "react";
+import {
+  SafeAreaView,
+  ScrollView,
+  StyleSheet
+} from "react-native";
 
 const Home = () => {
+  const [loading, setLoading] = useState(true);
+  const [loadedComponents, setLoadedComponents] = useState(0);
+
+  
+  // Lottie ve loading ile ilgili kodlar kaldırıldı
   return (
     <SafeAreaView style={{ flex: 1, padding: 10 }}>
-      <ScrollView>
-        <Header/>
+      <ScrollView style={{ flex: 1 }}>
+        <Header />
         <BookOfThisMonth />
         <PopularAuthors />
         <SuggestedBooks />
@@ -25,6 +27,19 @@ const Home = () => {
   );
 };
 
-export default Home;
+const styles = StyleSheet.create({
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#fff',
+  },
+  loadingText: {
+    marginTop: 16,
+    fontSize: 18,
+    color: '#888',
+    fontWeight: 'bold',
+  },
+});
 
-const styles = StyleSheet.create({});
+export default Home;

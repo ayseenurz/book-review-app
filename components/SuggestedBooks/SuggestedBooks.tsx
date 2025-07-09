@@ -14,6 +14,7 @@ interface Book {
   };
 }
 
+
 const SuggestedBooks: React.FC = () => {
   const [books, setBooks] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -27,26 +28,24 @@ const SuggestedBooks: React.FC = () => {
         setBooks(shuffle(data.items || []));
       })
       .catch((error) => console.error("API hatası:", error))
-      .finally(() => setLoading(false));
+      .finally(() => {
+        setLoading(false);
+      });
   }, []);
+  
 
   if (loading) return <ActivityIndicator style={{ marginTop: 20 }} />;
 
-  // FlatList'e gönderilen kitapları kontrol etmek için log ekle
-  /*console.log('SuggestedBooks books:', books);*/
-
   return (
-    <TouchableOpacity style={styles.container} onPress={() => router.push("/book-detail/1")}>
+    <TouchableOpacity style={styles.container} onPress={() => router.push("/book-detail/1")}> 
       <Text style={styles.title}>Okuman Gerekenler</Text>
       <View style={styles.container}>
-      <FlatList
-        horizontal
-        data={books}
-        keyExtractor={(item) => item.id}
-        showsHorizontalScrollIndicator={false}
-        renderItem={({ item }) => {
-          /*console.log('SuggestedBooks renderItem:', item);*/
-          return (
+        <FlatList
+          horizontal
+          data={books}
+          keyExtractor={(item) => item.id}
+          showsHorizontalScrollIndicator={false}
+          renderItem={({ item }) => (
             <SuggestedBooksCard
               title={item.volumeInfo.title}
               authors={item.volumeInfo.authors}
@@ -54,10 +53,9 @@ const SuggestedBooks: React.FC = () => {
               publishedDate={item.volumeInfo.publishedDate}
               id={item.id}
             />
-          );
-        }}
-        contentContainerStyle={{ paddingLeft: 16, paddingRight: 16 }}
-      />
+          )}
+          contentContainerStyle={{ paddingLeft: 16, paddingRight: 16 }}
+        />
       </View>
     </TouchableOpacity>
   );
