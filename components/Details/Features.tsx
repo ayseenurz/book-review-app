@@ -1,32 +1,32 @@
-import { StyleSheet, Text, View, Linking, TouchableOpacity } from 'react-native'
-import React from 'react'
-import { Colors } from '@/constants/Colors'
+import { Colors } from '@/constants/Colors';
+import { useUser } from '@clerk/clerk-expo';
+import React from 'react';
+import { Image, StyleSheet, Text, View } from 'react-native';
 
 interface FeaturesProps {
   volume: any;
 }
 
 const Features: React.FC<FeaturesProps> = ({ volume }) => {
+  const { isLoaded, isSignedIn, user } = useUser();
+  console.log('isLoaded:', isLoaded, 'isSignedIn:', isSignedIn, 'user:', user);
   if (!volume) return null;
   return (
     <View style={styles.container}>
-      {volume.publishedDate && (
-        <Text style={styles.feature}><Text style={styles.label}>Basım Yılı:</Text> {volume.publishedDate}</Text>
-      )}
-      {volume.publisher && (
-        <Text style={styles.feature}><Text style={styles.label}>Basımevi:</Text> {volume.publisher}</Text>
-      )}
-      {volume.pageCount && (
-        <Text style={styles.feature}><Text style={styles.label}>Sayfa Sayısı:</Text> {volume.pageCount}</Text>
-      )}
-      {volume.language && (
-        <Text style={styles.feature}><Text style={styles.label}>Dil:</Text> {volume.language.toUpperCase()}</Text>
-      )}
-      {volume.infoLink && (
-        <TouchableOpacity onPress={() => Linking.openURL(volume.infoLink)}>
-          <Text style={styles.link}>Google Books'ta Görüntüle</Text>
-        </TouchableOpacity>
-      )}
+      <View style={styles.iconWrapper}>
+        <Image source={require("@/assets/icons/calendar.png")} style={styles.icon} resizeMode="contain" />
+        <Text style={styles.iconText}>{volume.publishedDate}</Text>
+      </View>
+      <View style={styles.iconWrapper}>
+        <Text style={styles.iconSeparator}>|</Text>
+        <Image source={require("@/assets/icons/bookmark.png")} style={styles.icon} resizeMode="contain" />
+        <Text style={styles.iconText}>count</Text>
+      </View>
+      <View style={styles.iconWrapper}>
+        <Text style={styles.iconSeparator}>|</Text>
+        <Image source={require("@/assets/icons/world.png")} style={styles.icon} resizeMode="contain" />
+        <Text style={styles.iconText}>{volume.language.toUpperCase()}</Text>
+      </View>
     </View>
   )
 }
@@ -35,30 +35,36 @@ export default Features
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 350,
     backgroundColor: Colors.light.acikKrem,
+    flexDirection: "row",
+    justifyContent: "space-around",
     borderRadius: 10,
-    padding: 16,
-    marginHorizontal: 12,
+    borderWidth: 1.5,
+    borderColor: Colors.light.koyuKahverengi,
+    padding: 10,
+    marginHorizontal: 10,
     shadowColor: '#000',
     shadowOpacity: 0.06,
     shadowRadius: 4,
     elevation: 1,
   },
-  feature: {
-    fontSize: 15,
+  iconWrapper: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    gap: 20,
+  },
+  iconText: {
+    fontSize: 16,
     color: '#333',
     marginBottom: 6,
   },
-  label: {
-    fontWeight: 'bold',
-    color: '#6c584c',
+  icon: {
+    width: 20,
+    height: 20,
   },
-  link: {
-    color: '#85586f',
-    fontWeight: 'bold',
-    marginTop: 10,
-    fontSize: 15,
-    textDecorationLine: 'underline',
+  iconSeparator: {
+    fontSize: 24,
+    color: Colors.light.koyuKahverengi,
   },
 })

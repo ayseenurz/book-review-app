@@ -3,13 +3,14 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import { Dimensions, Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import BookmarkButton from "../BookmarkButton";
 
 interface SuggestedBooksCardProps {
   title: string;
   authors?: string[];
   thumbnail?: string;
   publishedDate?: string;
-  id?: string;
+  id: string;
 }
 
 const screenWidth = Dimensions.get("window").width;
@@ -51,30 +52,7 @@ const SuggestedBooksCard: React.FC<SuggestedBooksCardProps> = ({
         <Text style={styles.authors}>{authors?.join(", ") || "Bilinmeyen yazar"}</Text>
         <Text style={styles.date}>{publishedDate}</Text>
       </View>
-      <TouchableOpacity
-        onPress={async (e) => {
-          e.stopPropagation && e.stopPropagation();
-          setBookmarked((prev) => !prev);
-          await addToBookmarks({ id, title, authors, thumbnail, publishedDate });
-        }}
-        style={{
-          position: "absolute",
-          top: 8,
-          right: 8,
-          marginTop: 4,
-          zIndex: 10,
-        }}
-        hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-      >
-        <Image
-          source={
-            bookmarked
-              ? require("@/assets/icons/bookmark-filled.png")
-              : require("@/assets/icons/bookmark.png")
-          }
-          style={{ width: 20, height: 20 }}
-        />
-      </TouchableOpacity>
+      <BookmarkButton book={{ id, title, authors, coverUrl: thumbnail, publishedDate }} />
     </TouchableOpacity>
   );
 };

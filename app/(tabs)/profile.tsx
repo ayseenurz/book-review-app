@@ -1,26 +1,23 @@
 import { Colors } from '@/constants/Colors';
-import { useUser } from '@clerk/clerk-expo';
+import { useAuth, useUser } from '@clerk/clerk-expo';
 import { router } from 'expo-router';
-import { signOut } from 'firebase/auth';
 import React from 'react';
 import { Image, SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 
 const Profile = () => {
-  const {user} = useUser()
+  const {user} = useUser();
+  const {signOut} = useAuth();
 
   return (
     <SafeAreaView style={styles.container}>
-      <TouchableOpacity style={styles.logoutButton} onPress={() => signOut(auth)}>
+      <TouchableOpacity style={styles.logoutButton} onPress={() => signOut()}>
         <Image source={require('@/assets/images/logout.png')} style={styles.logoutButtonIcon} resizeMode='contain' />
       </TouchableOpacity>
       <View style={styles.avatarContainer}>
         <Image source={{ uri: user?.imageUrl }} style={styles.avatar} />
         <Text style={styles.name}>{user?.fullName}</Text>
         <Text style={styles.email}>{user?.emailAddresses[0].emailAddress}</Text>
-        <TouchableOpacity style={styles.editButton} onPress={() => router.push('/profile/edit')}>
-          <Text style={styles.editButtonText}>Profili Düzenle</Text>
-        </TouchableOpacity>
       </View>
       <View style={styles.statsContainer}>
         <View style={styles.statBox}>
@@ -49,6 +46,7 @@ const styles = StyleSheet.create({
   },
   avatarContainer: {
     alignItems: 'center',
+    marginTop: 80,
     marginBottom: 30,
   },
   avatar: {
