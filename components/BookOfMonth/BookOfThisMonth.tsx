@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { ActivityIndicator, FlatList, StyleSheet, Text, View } from "react-native";
 import BookOfThisMonthCard from "./BookOfThisMonthCard";
+import { Colors } from "@/constants/Colors";
 
 interface Book {
   id: string;
@@ -111,10 +112,11 @@ const BookOfThisMonth: React.FC = () => {
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 24,
-    paddingHorizontal: 16,
+    marginTop: 10,
   },
   title: {
+    paddingHorizontal: 16,
+    color: Colors.light.koyuKahverengi,
     fontSize: 20,
     fontWeight: "bold",
     marginBottom: 12,

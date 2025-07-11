@@ -44,7 +44,7 @@ const BookmarkList = () => {
   if (!bookmarks.length) {
     return (
       <View style={styles.emptyContainer}>
-        <Image source={require('../../assets/icons/bookmark.png')} style={styles.emptyIcon} />
+        <Image source={require('../../assets/icons/unchecked-bookmark.png')} style={styles.emptyIcon} />
         <Text style={styles.emptyText}>Henüz hiç kitap kaydetmediniz.</Text>
       </View>
     );

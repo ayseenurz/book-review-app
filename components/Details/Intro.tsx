@@ -10,6 +10,7 @@ import {
   View,
 } from "react-native";
 import BookmarkButton from "../BookmarkButton";
+import { Colors } from "@/constants/Colors";
 
 interface IntroProps {
   title: string;
@@ -38,7 +39,7 @@ const Intro: React.FC<IntroProps> = ({
       <View style={styles.backButtonWrapper}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Image
-            source={require("@/assets/images/back.png")}
+            source={require("@/assets/icons/back.png")}
             style={styles.backButton}
             resizeMode="contain"
           />
@@ -118,7 +119,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 22,
     fontWeight: "bold",
-    color: "black",
+    color: Colors.light.koyuKahverengi,
     textAlign: "left",
     marginBottom: 6,
     letterSpacing: 0.2,
@@ -126,7 +127,7 @@ const styles = StyleSheet.create({
   author: {
     fontSize: 16,
     fontWeight: "600",
-    color: "black",
+    color: Colors.light.koyuKahverengi,
     textAlign: "left",
     marginBottom: 2,
     letterSpacing: 0.1,
@@ -163,7 +164,7 @@ const styles = StyleSheet.create({
   details: {
     fontSize: 16,
     fontWeight: "bold",
-    color: "black",
+    color: Colors.light.koyuKahverengi,
     textAlign: "left",
   },
 });

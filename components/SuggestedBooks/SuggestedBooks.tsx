@@ -2,6 +2,7 @@ import { router } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { ActivityIndicator, FlatList, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import SuggestedBooksCard from "./SuggestedBooksCard";
+import { Colors } from "@/constants/Colors";
 interface Book {
   id: string;
   volumeInfo: {
@@ -23,7 +24,6 @@ const SuggestedBooks: React.FC = () => {
     fetch("https://www.googleapis.com/books/v1/volumes?q=fiction")
       .then((res) => res.json())
       .then((data) => {
-        // Kitapları rastgele karıştır
         const shuffle = (arr: any[]) => arr.sort(() => Math.random() - 0.5);
         setBooks(shuffle(data.items || []));
       })
@@ -54,22 +54,24 @@ const SuggestedBooks: React.FC = () => {
               id={item.id}
             />
           )}
-          contentContainerStyle={{ paddingLeft: 16, paddingRight: 16 }}
+          contentContainerStyle={{ paddingLeft: 8, paddingRight: 8 }}
         />
       </View>
+      <View style={{height: 60}}></View>
     </TouchableOpacity>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    marginVertical: 20,
+    flex:1,
   },
   title: {
     fontSize:20,
     fontWeight: "bold",
     marginBottom: 12,
     marginLeft: 16,
+    color: Colors.light.koyuKahverengi,
   },
 });
 

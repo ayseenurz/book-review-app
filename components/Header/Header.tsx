@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
     flex:1,
   },
   headerContainer: {
-    flexDirection:'row',justifyContent:'space-between', alignItems: 'flex-end', height: 72, padding:10, marginTop:10,
+    flexDirection:'row',justifyContent:'space-between', alignItems: 'flex-end', height: 72, padding:10, margin:12,
   },
   avatarContainer: {
     borderWidth:3,

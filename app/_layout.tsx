@@ -11,6 +11,7 @@ import { useColorScheme } from "../hooks/useColorScheme";
 import * as SecureStore from "expo-secure-store";
 import { ClerkProvider, SignedIn, SignedOut } from "@clerk/clerk-expo";
 import LoginScreen from "@/components/LoginScreen";
+import CategoryListScreen from "./category-list/[genre]";
 
 
 const tokenCache = {
@@ -56,6 +57,7 @@ export default function RootLayout() {
             >
               <Stack.Screen name="(tabs)" />
               <Stack.Screen name="index" />
+              <Stack.Screen name="category-list/[genre]" />
               <Stack.Screen name="+not-found" />
             </Stack>
             <StatusBar style="auto" />

@@ -9,7 +9,7 @@ interface FeaturesProps {
 
 const Features: React.FC<FeaturesProps> = ({ volume }) => {
   const { isLoaded, isSignedIn, user } = useUser();
-  console.log('isLoaded:', isLoaded, 'isSignedIn:', isSignedIn, 'user:', user);
+  {/*console.log('isLoaded:', isLoaded, 'isSignedIn:', isSignedIn, 'user:', user);*/}
   if (!volume) return null;
   return (
     <View style={styles.container}>
@@ -19,7 +19,7 @@ const Features: React.FC<FeaturesProps> = ({ volume }) => {
       </View>
       <View style={styles.iconWrapper}>
         <Text style={styles.iconSeparator}>|</Text>
-        <Image source={require("@/assets/icons/bookmark.png")} style={styles.icon} resizeMode="contain" />
+        <Image source={require("@/assets/icons/unchecked-bookmark.png")} style={styles.icon} resizeMode="contain" />
         <Text style={styles.iconText}>count</Text>
       </View>
       <View style={styles.iconWrapper}>

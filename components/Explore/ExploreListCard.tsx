@@ -8,6 +8,11 @@ interface ExploreListCardProps {
   color?: string;
   image?: any;
   index?: number;
+  cardHeight?: number;
+  cardWidth?: number;
+  compact?: boolean;
+  style?: object;
+  hideGenreName?: boolean; // yeni prop
 }
 
 const defaultColors = [
@@ -23,31 +28,57 @@ const defaultColors = [
   '#e6ccb2', // soft tan (dark academia, replaces previous green)
 ];
 
-const ExploreListCard: React.FC<ExploreListCardProps> = ({ genre, onPress, color, image, index }) => {
+const ExploreListCard: React.FC<ExploreListCardProps> = ({
+  genre,
+  onPress,
+  color,
+  image,
+  index,
+  cardHeight,
+  cardWidth,
+  compact,
+  style,
+  hideGenreName, // yeni prop
+}) => {
   const bgColor = color || (typeof index === 'number' ? defaultColors[index % defaultColors.length] : '#f5f5f5');
   return (
-    <TouchableOpacity style={[styles.card, { backgroundColor: bgColor }]} onPress={onPress}>
+    <TouchableOpacity
+      style={[
+        styles.card,
+        { backgroundColor: bgColor },
+        cardHeight ? { height: cardHeight } : {},
+        cardWidth ? { width: cardWidth } : {},
+        compact ? styles.compact : {},
+        style,
+      ]}
+      onPress={onPress}
+    >
       {image && <Image source={image} style={styles.icon} />}
-      <Text style={styles.text}>{genre}</Text>
+      {!hideGenreName && <Text style={styles.text}>{genre}</Text>}
     </TouchableOpacity>
-  )
-}
+  );
+};
 
 export default ExploreListCard
 
 const styles = StyleSheet.create({
   card: {
-    flex: 1,
     height: 200,
-    width: 180,
+    width: 150,
     margin: 16,
     backgroundColor: Colors.light.acikKrem,
     paddingVertical: 28,
-    paddingHorizontal: 12,
+    paddingHorizontal: 16,
     borderRadius: 12,
     alignItems: 'center',
     justifyContent: 'center',
     elevation: 2,
+    padding: 0
+  },
+  compact: {
+    height: 60,
+    width: 90,
+    padding: 4,
   },
   icon: {
     width: 36,
@@ -59,5 +90,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: '400',
     color: Colors.light.acikKrem,
+    textAlign: 'center',       // Metni ortala
+    width: '100%'
   },
 })

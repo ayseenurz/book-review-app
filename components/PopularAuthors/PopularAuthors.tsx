@@ -2,6 +2,7 @@ import { router } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { ActivityIndicator, FlatList, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import PopularAuthorsCard from "./PopularAuthorsCard";
+import { Colors } from "@/constants/Colors";
 
 
 
@@ -33,8 +34,6 @@ const PopularAuthors: React.FC = () => {
   }
   const colors = ["#a3917b", "#6c584c", "#c2b6a3", "#a89984", "#7a6f63"];
 
-  /*console.log('PopularAuthors authors:', authors);*/
-
   return (
     <View>
       <Text style={styles.title}>Popüler Yazarlar</Text>
@@ -59,14 +58,13 @@ const PopularAuthors: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingHorizontal: 16,
   },
   title: {
     alignContent: "flex-start",
     fontSize: 20,
     fontWeight: "700",
     margin: 12,
-    color: "#222",
+    color: Colors.light.koyuKahverengi,
   },
 });
 

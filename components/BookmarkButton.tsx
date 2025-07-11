@@ -98,13 +98,13 @@ const BookmarkButton = ({ book }: { book: Book }) => {
         <Image source={require("@/assets/icons/checked-bookmark.png")}
                style={styles.icon}
                resizeMode="contain"
-               defaultSource={require("@/assets/icons/bookmark.png")} // fallback
+               defaultSource={require("@/assets/icons/unchecked-bookmark.png")} // fallback
         />
       ) : (
         <Image source={require("@/assets/icons/unchecked-bookmark.png")}
                style={styles.icon}
                resizeMode="contain"
-               defaultSource={require("@/assets/icons/bookmark.png")} // fallback
+               defaultSource={require("@/assets/icons/checked-bookmark.png")} // fallback
         />
       )}
     </TouchableOpacity>

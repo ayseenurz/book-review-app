@@ -11,8 +11,11 @@ const MAX_LINES = 4;
 const Description: React.FC<DescriptionProps> = ({ description = "" }) => {
   const [expanded, setExpanded] = useState(false);
 
+  // HTML taglerini temizle
+  const stripHtmlTags = (text: string) => text.replace(/<[^>]*>/g, '');
+
   const safeDescription = description || "";
-  // Eğer açıklama kısa ise buton gösterme
+  // açıklama kısa ise buton gösterilmeyecek
   const shouldShowReadMore = safeDescription.split(' ').length > 20 || safeDescription.length > 120;
 
   return (
@@ -22,7 +25,7 @@ const Description: React.FC<DescriptionProps> = ({ description = "" }) => {
         style={styles.description}
         numberOfLines={expanded ? undefined : MAX_LINES}
       >
-        {description}
+        {stripHtmlTags(description)}
       </Text>
       {shouldShowReadMore && (
         <TouchableOpacity onPress={() => setExpanded(!expanded)}>

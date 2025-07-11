@@ -1,4 +1,5 @@
 import BookOfThisMonth from "@/components/BookOfMonth/BookOfThisMonth";
+import Categories from "@/components/Explore/Categories";
 import Header from "@/components/Header/Header";
 import PopularAuthors from "@/components/PopularAuthors/PopularAuthors";
 import SuggestedBooks from "@/components/SuggestedBooks/SuggestedBooks";
@@ -19,6 +20,7 @@ const Home = () => {
     <SafeAreaView style={{ flex: 1, padding: 10 }}>
       <ScrollView style={{ flex: 1 }}>
         <Header />
+        <Categories />
         <BookOfThisMonth />
         <PopularAuthors />
         <SuggestedBooks />

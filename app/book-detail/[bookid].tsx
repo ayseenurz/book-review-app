@@ -6,7 +6,6 @@ import { useLocalSearchParams } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { ActivityIndicator, KeyboardAvoidingView, Platform, SafeAreaView, ScrollView, Text } from "react-native";
 
-// Google Books API anahtarınızı buraya ekleyin veya .env'den alın
 const GOOGLE_BOOKS_API_KEY = "AIzaSyDirdTKGcJsDXi5yGqGKmfXV2LWHMsSE5c";
 
 const BookDetail = () => {
@@ -32,6 +31,11 @@ const BookDetail = () => {
       .then((res) => res.json())
       .then((data) => {
         setBook(data);
+        if (data && data.volumeInfo && data.volumeInfo.categories) {
+          console.log('Kitabın kategorileri:', data.volumeInfo.categories);
+        } else {
+          console.log('Bu kitap için kategori bilgisi yok.');
+        }
         setLoading(false);
       })
       .catch(() => {
@@ -39,16 +43,6 @@ const BookDetail = () => {
         setLoading(false);
       });
   }, [bookid]);
-
-  /*// DEBUG: book ve volume değiştiğinde console.log ile yazdır
-  React.useEffect(() => {
-    if (book) {
-      console.log('book:', JSON.stringify(book, null, 2));
-      if (book.volumeInfo) {
-        console.log('volume:', book.volumeInfo);
-      }
-    }
-  }, [book]);*/
 
   if (loading)
     return <ActivityIndicator style={{ marginTop: 32 }} size="large" />;
@@ -67,7 +61,6 @@ const BookDetail = () => {
       </Text>
     );
 
-  // DEBUG: Gelen verileri ekrana yazdır
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <KeyboardAvoidingView

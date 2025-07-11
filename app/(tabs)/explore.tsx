@@ -13,7 +13,7 @@ import {
   TouchableWithoutFeedback,
   View,
 } from "react-native";
-import ExploreListCard from '../../components/Explore/ExploreListCard';
+import ExploreListCard from "../../components/Explore/ExploreListCard";
 import { useSearchResults } from "../../components/SearchResultsContext";
 import BookListCard from "../BookList/BookListCard";
 
@@ -26,23 +26,41 @@ const Explore = () => {
   const abortRef = useRef<AbortController | null>(null);
 
   const genres = [
-    "Roman", "Bilim Kurgu", "Fantastik", "Korku", "Tarih", "Biyografi", "Polisiye", "Çocuk", "Klasik", "Macera"
+    "Kişisel Gelişim",
+    "Bilim Kurgu",
+    "Fantastik",
+    "Sosyal Bilimler",
+    "Tarih",
+    "Biyografi",
+    "Din",
+    "Çocuk",
+    "Teknoloji ve Mühendislik",
+    "İş Dünyası ve Ekonomi",
   ];
 
   const genreColors = [
-    '#a3917b', '#6c584c', '#c2b6a3', '#a89984', '#7a6f63', '#e0b084', '#b7b7a4', '#ffe5b4', '#b5838d', '#adc178'
+    "#a3917b",
+    "#6c584c",
+    "#c2b6a3",
+    "#a89984",
+    "#7a6f63",
+    "#e0b084",
+    "#b7b7a4",
+    "#ffe5b4",
+    "#b5838d",
+    "#adc178",
   ];
   const genreImages: Record<string, any> = {
-    "Roman": require('../../assets/icons/roman.png'),
-    "Bilim Kurgu": require('../../assets/icons/scifi.png'),
-    "Fantastik": require('../../assets/icons/fantasy.png'),
-    "Korku": require('../../assets/icons/horror.png'),
-    "Tarih": require('../../assets/icons/history.png'),
-    "Biyografi": require('../../assets/icons/biography.png'),
-    "Polisiye": require('../../assets/icons/detective.png'),
-    "Çocuk": require('../../assets/icons/child.png'),
-    "Klasik": require('../../assets/icons/classic.png'),
-    "Macera": require('../../assets/icons/adventure.png'),
+    "Kişisel Gelişim": require("../../assets/icons/help.png"),
+    "Bilim Kurgu": require("../../assets/icons/scifi.png"),
+    Fantastik: require("../../assets/icons/fantasy.png"),
+    "Sosyal Bilimler": require("../../assets/icons/social-science.png"),
+    Tarih: require("../../assets/icons/history.png"),
+    Biyografi: require("../../assets/icons/biography.png"),
+    Din: require("../../assets/icons/religion.png"),
+    Çocuk: require("../../assets/icons/child.png"),
+    "Teknoloji ve Mühendislik": require("../../assets/icons/technology.png"),
+    "İş Dünyası ve Ekonomi": require("../../assets/icons/economic.png"),
   };
   // Her input değişiminde arama tetiklenir
   useEffect(() => {
@@ -114,9 +132,14 @@ const Explore = () => {
           />
           <View style={styles.searchIconContainer}>
             {search.trim() ? (
-              <TouchableOpacity onPress={() => { setSearch(''); setInputValue(''); }}>
+              <TouchableOpacity
+                onPress={() => {
+                  setSearch("");
+                  setInputValue("");
+                }}
+              >
                 <Image
-                  source={require('../../assets/icons/close.png')}
+                  source={require("../../assets/icons/close.png")}
                   style={styles.searchIcon}
                 />
               </TouchableOpacity>
@@ -167,11 +190,16 @@ const Explore = () => {
               keyExtractor={(item) => item.id}
               renderItem={({ item }) => <BookListCard book={item} />}
               ListFooterComponent={
-                loading ? <Text style={styles.loadingText}>Yükleniyor...</Text> : null
+                loading ? (
+                  <Text style={styles.loadingText}>Yükleniyor...</Text>
+                ) : null
               }
             />
           </>
         )}
+        <View style={styles.footer}>
+          <Text>...</Text>
+        </View>
       </SafeAreaView>
     </TouchableWithoutFeedback>
   );
@@ -256,6 +284,9 @@ const styles = StyleSheet.create({
     width: 24,
     height: 24,
     opacity: 0.3,
+  },
+  footer: {
+    marginTop: 16,
   },
 });
 

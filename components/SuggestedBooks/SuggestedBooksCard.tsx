@@ -59,7 +59,7 @@ const SuggestedBooksCard: React.FC<SuggestedBooksCardProps> = ({
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: Colors.light.koyuKahverengi,
+    backgroundColor: Colors.light.griKahve,
     padding: 16,
     borderRadius: 10,
     marginVertical: 4,
