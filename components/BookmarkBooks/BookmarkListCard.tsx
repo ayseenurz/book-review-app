@@ -1,13 +1,16 @@
-import { Colors } from '@/constants/Colors';
-import React from 'react';
-import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Colors } from "@/constants/Colors";
+import React from "react";
+import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 type BookmarkListCardProps = {
   book: any;
   onPress?: () => void;
 };
 
-const BookmarkListCard: React.FC<BookmarkListCardProps> = ({ book, onPress }) => {
+const BookmarkListCard: React.FC<BookmarkListCardProps> = ({
+  book,
+  onPress,
+}) => {
   const volume = book?.volumeInfo || {};
   return (
     <TouchableOpacity style={styles.card} onPress={onPress}>
@@ -22,9 +25,11 @@ const BookmarkListCard: React.FC<BookmarkListCardProps> = ({ book, onPress }) =>
         </View>
       )}
       <View style={styles.info}>
-        <Text style={styles.title} numberOfLines={2}>{volume.title || 'Başlıksız Kitap'}</Text>
+        <Text style={styles.title} numberOfLines={2}>
+          {volume.title || "Başlıksız Kitap"}
+        </Text>
         <Text style={styles.authors} numberOfLines={1}>
-          {volume.authors ? volume.authors.join(', ') : 'Bilinmeyen Yazar'}
+          {volume.authors ? volume.authors.join(", ") : "Bilinmeyen Yazar"}
         </Text>
         {volume.publishedDate && (
           <Text style={styles.date}>{volume.publishedDate}</Text>
@@ -38,13 +43,13 @@ export default BookmarkListCard;
 
 const styles = StyleSheet.create({
   card: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     backgroundColor: Colors.light.acikKrem,
     borderRadius: 10,
     padding: 12,
     marginVertical: 6,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOpacity: 0.08,
     shadowRadius: 4,
     elevation: 2,
@@ -54,34 +59,34 @@ const styles = StyleSheet.create({
     height: 90,
     borderRadius: 6,
     marginRight: 14,
-    backgroundColor: '#eee',
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: "#eee",
+    justifyContent: "center",
+    alignItems: "center",
   },
   placeholder: {
-    backgroundColor: '#f5f5f5',
+    backgroundColor: "#f5f5f5",
   },
   placeholderText: {
-    color: '#aaa',
+    color: "#aaa",
     fontSize: 12,
   },
   info: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: "center",
   },
   title: {
-    fontWeight: 'bold',
+    fontWeight: "bold",
     fontSize: 15,
-    color: '#222',
+    color: "#222",
     marginBottom: 4,
   },
   authors: {
-    color: '#666',
+    color: "#666",
     fontSize: 13,
     marginBottom: 2,
   },
   date: {
-    color: '#999',
+    color: "#999",
     fontSize: 12,
   },
 });

@@ -2,6 +2,7 @@ import Comments from "@/components/Details/Comments";
 import Description from "@/components/Details/Description";
 import Features from "@/components/Details/Features";
 import Intro from "@/components/Details/Intro";
+import { useUser } from "@clerk/clerk-expo";
 import { useLocalSearchParams } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { ActivityIndicator, KeyboardAvoidingView, Platform, SafeAreaView, ScrollView, Text } from "react-native";
@@ -19,6 +20,7 @@ const BookDetail = () => {
   const [book, setBook] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const { isLoaded, isSignedIn } = useUser();
 
   useEffect(() => {
     if (!bookid) return;
@@ -43,6 +45,9 @@ const BookDetail = () => {
         setLoading(false);
       });
   }, [bookid]);
+
+  if (!isLoaded) return <ActivityIndicator style={{ marginTop: 32 }} size="large" />;
+  if (!isSignedIn) return <Text style={{ color: 'red', marginTop: 32 }}>Giriş yapmalısınız.</Text>;
 
   if (loading)
     return <ActivityIndicator style={{ marginTop: 32 }} size="large" />;
@@ -74,6 +79,7 @@ const BookDetail = () => {
             author={volume.authors?.join(", ") || "Bilinmeyen yazar"}
             description={volume.description || ""}
             thumbnail={volume.imageLinks?.thumbnail}
+            id={bookid}
           />
           <Features volume={volume} />
           <Description description={volume.description} />

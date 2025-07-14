@@ -1,14 +1,28 @@
-import { useLocalSearchParams } from 'expo-router';
-import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, Image, StyleSheet, Text, View } from 'react-native';
+import { useLocalSearchParams, useRouter } from 'expo-router';
+import React, { useEffect, useRef, useState } from 'react';
+import { ActivityIndicator, Animated, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import Books from '../../components/Author/Books';
+import Details from '../../components/Author/Details';
+import Header from '../../components/Author/Header';
 
-const AuthorDetail = () => {
+const HEADER_MAX_HEIGHT = 320;
+const HEADER_MIN_HEIGHT = 120;
+
+const Detail = () => {
   const params = useLocalSearchParams();
+  const router = useRouter();
   const authorid = typeof params.authorid === 'string' ? params.authorid : '';
   const [authorInfo, setAuthorInfo] = useState<any>(null);
   const [authorLoading, setAuthorLoading] = useState(true);
 
-  // OpenLibrary'den yazar bilgisi çek
+  const scrollY = useRef(new Animated.Value(0)).current;
+
+  const animatedHeight = scrollY.interpolate({
+    inputRange: [-100, 0, 200],
+    outputRange: [HEADER_MAX_HEIGHT + 100, HEADER_MAX_HEIGHT, HEADER_MIN_HEIGHT],
+    extrapolate: 'clamp',
+  });
+
   useEffect(() => {
     if (!authorid) return;
     setAuthorLoading(true);
@@ -27,59 +41,66 @@ const AuthorDetail = () => {
 
   return (
     <View style={styles.container}>
-      {authorLoading ? (
-        <ActivityIndicator style={{ marginTop: 24 }} />
-      ) : authorInfo ? (
-        <View style={styles.authorBox}>
-          {authorInfo.key && (
-            <Image
-              source={{ uri: `https://covers.openlibrary.org/b/author/${authorInfo.key.replace('/authors/', '')}-L.jpg` }}
-              style={styles.authorImage}
-              resizeMode="cover"
-            />
-          )}
-          <Text style={styles.authorName}>{authorInfo.name}</Text>
-        </View>
-      ) : (
-        <Text style={styles.empty}>Yazar bilgisi bulunamadı.</Text>
-      )}
+      <Header animatedHeight={animatedHeight} />
+      <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
+        <Image
+          source={require('../../assets/icons/back.png')}
+          style={styles.backIcon}
+          resizeMode="contain"
+        />
+      </TouchableOpacity>
+      <Animated.ScrollView
+        style={{ flex: 1, width: '100%' }}
+        contentContainerStyle={{ paddingTop: HEADER_MAX_HEIGHT }}
+        scrollEventThrottle={16}
+        onScroll={Animated.event(
+          [{ nativeEvent: { contentOffset: { y: scrollY } } }],
+          { useNativeDriver: false }
+        )}
+      >
+        {authorLoading ? (
+          <ActivityIndicator style={{ marginTop: 24 }} />
+        ) : authorInfo ? (
+          <View style={styles.authorBox}>
+            <Details author={authorInfo} />
+            <Books authorName={authorInfo.name} />
+          </View>
+        ) : (
+          <Text style={styles.empty}>Yazar bilgisi bulunamadı.</Text>
+        )}
+      </Animated.ScrollView>
     </View>
   );
 };
 
-export default AuthorDetail;
+export default Detail;
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f8f6f2',
-    padding: 16,
-    justifyContent: 'center',
+  },
+  backButton: {
+    position: 'absolute',
+    top: 44,
+    left: 18,
+    zIndex: 10,
+    borderRadius: 20,
+    padding: 6,
     alignItems: 'center',
+    justifyContent: 'center',
+  },
+  backIcon: {
+    width: 28,
+    height: 28,
+    tintColor: '#6c584c',
   },
   authorBox: {
     alignItems: 'center',
-    backgroundColor: '#fff',
     borderRadius: 16,
-    padding: 24,
     shadowColor: '#000',
     shadowOpacity: 0.06,
     shadowRadius: 4,
     elevation: 1,
-  },
-  authorImage: {
-    width: 110,
-    height: 110,
-    borderRadius: 55,
-    marginBottom: 14,
-    backgroundColor: '#eee',
-  },
-  authorName: {
-    fontSize: 22,
-    fontWeight: 'bold',
-    color: '#6c584c',
-    marginBottom: 6,
-    textAlign: 'center',
   },
   empty: {
     color: '#888',

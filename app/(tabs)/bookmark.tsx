@@ -1,71 +1,100 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { View, Text, SafeAreaView, FlatList, StyleSheet } from 'react-native';
+import { View, Text, SafeAreaView, FlatList, StyleSheet, ActivityIndicator } from 'react-native';
 import BookListCard from '../BookList/BookListCard';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useFocusEffect } from 'expo-router';
+import { db } from '@/configs/FirebaseConfig';
+import { useUser } from '@clerk/clerk-expo';
+import { collection, getDocs } from 'firebase/firestore';
 
-// Favori kitaplar için context oluşturalım ve sayfalar arası geçişte güncel tutalım
-// Ancak burada context yoksa, en azından AsyncStorage ile güncel veri çekimini garanti altına alalım
-
-const BOOKMARKS_KEY = 'BOOKMARKED_BOOKS';
+// Firestore'dan kullanıcının favori kitap id'lerini çekip, Google Books API'dan kitap detaylarını getir
 
 const Bookmark = () => {
-  const [bookmarks, setBookmarks] = useState<any[]>([]);
+  const { isLoaded, isSignedIn, user } = useUser();
+  const [bookDetails, setBookDetails] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // AsyncStorage'dan favorileri çek ve BookListCard'ın beklediği formata dönüştür
-  const loadBookmarks = async () => {
+  // Firestore'dan favori kitap id'lerini çek
+  const fetchFavoriteBookIds = async (): Promise<string[]> => {
+    if (!isLoaded || !isSignedIn || !user?.id) return [];
+    try {
+      const snap = await getDocs(collection(db, "Favorites", user.id, "books"));
+      return snap.docs.map(doc => doc.id);
+    } catch (e) {
+      return [];
+    }
+  };
+
+  // Google Books API'dan kitap detaylarını çek
+  const fetchBookDetails = async (ids: string[]) => {
+    if (!ids || ids.length === 0) {
+      setBookDetails([]);
+      setLoading(false);
+      return;
+    }
     setLoading(true);
     try {
-      const json = await AsyncStorage.getItem(BOOKMARKS_KEY);
-      if (json) {
-        let parsed = JSON.parse(json);
-        // Eğer sadece volumeInfo saklanıyorsa, id ekle
-        if (Array.isArray(parsed)) {
-          parsed = parsed.map((item) => {
-            // Eğer item.id yoksa, item.volumeInfo.id veya başka bir id ekle
-            if (!item.id && item.volumeInfo && item.volumeInfo.industryIdentifiers) {
-              // Google Books API'dan gelen id yoksa, ISBN'den türet
-              const isbn = item.volumeInfo.industryIdentifiers?.[0]?.identifier;
-              return { ...item, id: isbn || Math.random().toString(36).slice(2) };
-            }
-            return item;
-          });
+      // Google Books API'dan kitapları sırayla çek (çok fazla kitap varsa optimize edilebilir)
+      const results: any[] = [];
+      for (const id of ids) {
+        try {
+          const res = await fetch(`https://www.googleapis.com/books/v1/volumes/${id}`);
+          const data = await res.json();
+          if (data && data.id && data.volumeInfo) {
+            results.push(data);
+          }
+        } catch (err) {
+          // Hatalı kitap atlanır
         }
-        setBookmarks(parsed);
-      } else {
-        setBookmarks([]);
       }
+      setBookDetails(results);
     } catch (e) {
-      setBookmarks([]);
+      setBookDetails([]);
     }
     setLoading(false);
   };
 
-  // Sayfa her odaklandığında bookmark'ları güncelle
+  // Sayfa her odaklandığında Firestore'dan güncel favori kitapları çek
   useFocusEffect(
     useCallback(() => {
-      loadBookmarks();
-    }, [])
+      let isActive = true;
+      const load = async () => {
+        setLoading(true);
+        const ids = await fetchFavoriteBookIds();
+        if (isActive) {
+          await fetchBookDetails(ids);
+        }
+      };
+      load();
+      return () => { isActive = false; };
+    }, [isLoaded, isSignedIn, user?.id])
   );
 
   // İlk açılışta da yükle (ekstra güvence)
   useEffect(() => {
-    loadBookmarks();
-  }, []);
-
-
+    let isActive = true;
+    const load = async () => {
+      setLoading(true);
+      const ids = await fetchFavoriteBookIds();
+      if (isActive) {
+        await fetchBookDetails(ids);
+      }
+    };
+    load();
+    return () => { isActive = false; };
+  }, [isLoaded, isSignedIn, user?.id]);
 
   return (
     <SafeAreaView style={{ flex: 1, padding: 16 }}>
       <Text style={styles.title}>Favori Kitaplarım</Text>
-      {loading ? (
-        <Text style={{ marginTop: 32 }}>Yükleniyor...</Text>
-      ) : bookmarks.length === 0 ? (
+      {!isLoaded || !isSignedIn ? (
+        <Text style={{ marginTop: 32, color: '#888' }}>Favori kitaplarınızı görmek için giriş yapmalısınız.</Text>
+      ) : loading ? (
+        <ActivityIndicator style={{ marginTop: 32 }} size="large" />
+      ) : bookDetails.length === 0 ? (
         <Text style={{ marginTop: 32, color: '#888' }}>Henüz favorilere kitap eklemediniz.</Text>
       ) : (
         <FlatList
-          data={bookmarks}
+          data={bookDetails}
           keyExtractor={item => item.id}
           renderItem={({ item }) => <BookListCard book={item} />}
         />
@@ -76,6 +105,7 @@ const Bookmark = () => {
 
 const styles = StyleSheet.create({
   title: {
+    paddingHorizontal: 16,
     fontSize: 22,
     fontWeight: 'bold',
     marginBottom: 16,

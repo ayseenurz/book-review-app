@@ -1,4 +1,6 @@
-import { useNavigation } from "@react-navigation/native";
+import { useFavorites } from "@/components/FavoritesContext";
+import { Colors } from "@/constants/Colors";
+import { router } from "expo-router";
 import React from "react";
 import {
   Image,
@@ -10,7 +12,6 @@ import {
   View,
 } from "react-native";
 import BookmarkButton from "../BookmarkButton";
-import { Colors } from "@/constants/Colors";
 
 interface IntroProps {
   title: string;
@@ -33,11 +34,13 @@ const Intro: React.FC<IntroProps> = ({
   language,
   id,
 }) => {
-  const navigation = useNavigation();
+  const { favorites } = useFavorites();
+  const isFavorite = favorites.includes(id || "");
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.backButtonWrapper}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
+        <TouchableOpacity onPress={() => router.back()}>
           <Image
             source={require("@/assets/icons/back.png")}
             style={styles.backButton}
@@ -45,16 +48,18 @@ const Intro: React.FC<IntroProps> = ({
           />
         </TouchableOpacity>
         <Text style={styles.details}>Kitap Detayları</Text>
-        <BookmarkButton book={{
-          title,
-          author,
-          coverUrl: thumbnail || "",
-          description,
-          publishedDate,
-          pageCount: pageCount ? Number(pageCount) : 0, // pageCount'u number'a çevirir
-          language,
-          id: id || ""
-        }} />
+        <BookmarkButton
+          book={{
+            id: id ? String(id) : "",
+            title: title,
+            author: author,
+            coverUrl: thumbnail || "",
+            description: description,
+            publishedDate: publishedDate,
+            pageCount: pageCount ? Number(pageCount) : 0,
+            language: language,
+          }}
+        />
       </View>
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <View style={styles.row}>
@@ -70,9 +75,11 @@ const Intro: React.FC<IntroProps> = ({
             <Text style={styles.title} numberOfLines={2} ellipsizeMode="tail">
               {title || "Başlıksız Kitap"}
             </Text>
-            <Text style={styles.author} numberOfLines={1} ellipsizeMode="tail">
-              {author || "Bilinmeyen Yazar"}
-            </Text>
+            <TouchableOpacity onPress={() => router.push(`/author-detail/${author}`)}>
+              <Text style={styles.author} numberOfLines={1} ellipsizeMode="tail">
+                {author || "Bilinmeyen Yazar"}
+              </Text>
+            </TouchableOpacity>
           </View>
         </View>
       </ScrollView>

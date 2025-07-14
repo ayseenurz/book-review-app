@@ -1,8 +1,10 @@
+import { useFavorites } from "@/components/FavoritesContext";
+import { Colors } from "@/constants/Colors";
 import { router } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { ActivityIndicator, FlatList, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import SuggestedBooksCard from "./SuggestedBooksCard";
-import { Colors } from "@/constants/Colors";
+
 interface Book {
   id: string;
   volumeInfo: {
@@ -16,9 +18,10 @@ interface Book {
 }
 
 
-const SuggestedBooks: React.FC = () => {
+const SuggestedBooks: React.FC = (favorites) => {
   const [books, setBooks] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  
 
   useEffect(() => {
     fetch("https://www.googleapis.com/books/v1/volumes?q=fiction")

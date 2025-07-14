@@ -1,3 +1,4 @@
+import { useFavorites } from "@/components/FavoritesContext";
 import { db } from '@/configs/FirebaseConfig';
 import { useUser } from '@clerk/clerk-expo';
 import { deleteDoc, doc, getDoc, setDoc } from 'firebase/firestore';
@@ -20,6 +21,7 @@ interface Book {
 // book prop'unun tipini Book olarak güncelledim
 const BookmarkButton = ({ book }: { book: Book }) => {
   const { isLoaded, isSignedIn, user } = useUser();
+  const { favorites, setFavorites } = useFavorites();
   const [isFavorite, setIsFavorite] = useState(false);
 
   useEffect(() => {
@@ -46,7 +48,7 @@ const BookmarkButton = ({ book }: { book: Book }) => {
       if (!isLoaded || !isSignedIn || !user?.id || !book?.id) return; // Hatalı çağrıyı engelle
       await setDoc(doc(db, "Favorites", user.id, "books", book.id), {
         title: book.title,
-        author: book.author,
+        author: book.author ?? (book.authors ? book.authors.join(', ') : '') ?? "",
         coverUrl: book.coverUrl || "",
         publishedDate: book.publishedDate || "",
         pageCount: book.pageCount || 0,
@@ -58,6 +60,7 @@ const BookmarkButton = ({ book }: { book: Book }) => {
       });
       setIsFavorite(true);
       Alert.alert("Başarılı", "Kitap favorilere eklendi!");
+      setFavorites((prev: string[]) => [...prev, book.id]); // Context'i güncelle
     } catch (error) {
       console.error('Favoriye ekleme hatası:', error);
     }
@@ -70,6 +73,7 @@ const BookmarkButton = ({ book }: { book: Book }) => {
       await deleteDoc(doc(db, "Favorites", user.id, "books", book.id));
       setIsFavorite(false);
       Alert.alert("Başarılı", "Kitap favorilerden çıkarıldı!");
+      setFavorites((prev: string[]) => prev.filter((id: string) => id !== book.id)); // Context'i güncelle
     } catch (error) {
       console.error('Favoriden çıkarma hatası:', error);
     }
