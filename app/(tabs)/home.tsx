@@ -2,29 +2,37 @@ import BookOfThisMonth from "@/components/BookOfMonth/BookOfThisMonth";
 import Categories from "@/components/Explore/Categories";
 import { useFavorites } from "@/components/FavoritesContext";
 import Header from "@/components/Header/Header";
+import LoadingScreen from "@/components/LoadingScreen";
 import PopularAuthors from "@/components/PopularAuthors/PopularAuthors";
 import SuggestedBooks from "@/components/SuggestedBooks/SuggestedBooks";
+import { useFocusEffect } from 'expo-router';
 import React, { useCallback, useEffect, useState } from "react";
-import { ActivityIndicator, RefreshControl, SafeAreaView, ScrollView, StyleSheet, View } from "react-native";
+import { RefreshControl, SafeAreaView, ScrollView, StyleSheet } from "react-native";
 
 const Home = () => {
   const { favorites } = useFavorites();
-  const [loading, setLoading] = useState(true);
+  const [loadingBooks, setLoadingBooks] = useState(true);
+  const [loadingSuggested, setLoadingSuggested] = useState(true);
+  const [loadingAuthors, setLoadingAuthors] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
 
-  // İlk yükleme
+  const allLoaded = !loadingBooks && !loadingSuggested && !loadingAuthors;
+
+  useFocusEffect(
+    useCallback(() => {
+    }, [])
+  );
+
   useEffect(() => {
     fetchData();
   }, []);
 
   // Fetch işlemini fonksiyonlaştır
   const fetchData = useCallback(() => {
-    setLoading(true);
-    // Burada gerçek fetch işlemlerini başlatabilirsiniz
-    // Örnek: 1.5 saniye sonra loading'i false yap
     setTimeout(() => {
-      setLoading(false);
-      setRefreshing(false);
+      setLoadingBooks(false);
+      setLoadingSuggested(false);
+      setLoadingAuthors(false);
     }, 1500);
   }, []);
 
@@ -32,23 +40,21 @@ const Home = () => {
   const onRefresh = useCallback(() => {
     setRefreshing(true);
     fetchData();
+    setTimeout(() => setRefreshing(false), 1500);
   }, [fetchData]);
 
-  // Eğer loading ise sadece ActivityIndicator göster, içerik gösterme
-  if (loading) {
-    return (
-      <SafeAreaView style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <ActivityIndicator size="large" color="#6c584c" />
-      </SafeAreaView>
-    );
+  if (!allLoaded) {
+    return <LoadingScreen />;
   }
 
   return (
-    <SafeAreaView style={{ flex: 1, padding: 10 }}>
+    <SafeAreaView style={{ flex: 1, padding: 10, backgroundColor: '#fff' }}>
+      <Header />
       <ScrollView
         style={{ flex: 1 }}
         refreshControl={
           <RefreshControl
+            
             refreshing={refreshing}
             onRefresh={onRefresh}
             colors={["#6c584c"]}
@@ -56,11 +62,10 @@ const Home = () => {
           />
         }
       >
-        <Header />
         <Categories />
-        <BookOfThisMonth />
-        <PopularAuthors />
-        <SuggestedBooks />
+        <BookOfThisMonth onLoaded={() => setLoadingBooks(false)} />
+        <PopularAuthors onLoaded={() => setLoadingAuthors(false)} />
+        <SuggestedBooks onLoaded={() => setLoadingSuggested(false)} />
       </ScrollView>
     </SafeAreaView>
   );

@@ -5,7 +5,7 @@ import BookListCard from './BookListCard'
 
 interface BookListProps {
   books?: any[]
-  contextLabel?: string // ör: "Arama Sonuçları", "Favori Kitaplarım" gibi
+  contextLabel?: string 
 }
 
 const BookList: React.FC<BookListProps> = ({ books = [], contextLabel }) => {

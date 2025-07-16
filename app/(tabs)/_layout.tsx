@@ -4,8 +4,6 @@ import { Tabs } from "expo-router";
 import React from "react";
 import { StyleSheet } from "react-native";
 
-// This is the layout for the tab navigation in the app.
-// It defines the tab bar and the screens that will be displayed in each tab.
 
 const TabLayout = () => {
   return (

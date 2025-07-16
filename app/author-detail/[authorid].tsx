@@ -1,9 +1,10 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useEffect, useRef, useState } from 'react';
-import { ActivityIndicator, Animated, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Animated, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Books from '../../components/Author/Books';
 import Details from '../../components/Author/Details';
 import Header from '../../components/Author/Header';
+import LoadingScreen from '../../components/LoadingScreen';
 
 const HEADER_MAX_HEIGHT = 320;
 const HEADER_MIN_HEIGHT = 120;
@@ -36,7 +37,7 @@ const Detail = () => {
         }
       })
       .catch(() => setAuthorInfo(null))
-      .finally(() => setAuthorLoading(false));
+      .finally(() => setTimeout(() => setAuthorLoading(false), 1000));
   }, [authorid]);
 
   return (
@@ -59,7 +60,7 @@ const Detail = () => {
         )}
       >
         {authorLoading ? (
-          <ActivityIndicator style={{ marginTop: 24 }} />
+          <LoadingScreen />
         ) : authorInfo ? (
           <View style={styles.authorBox}>
             <Details author={authorInfo} />

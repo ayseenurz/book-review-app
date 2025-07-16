@@ -10,15 +10,13 @@ import {
   View,
 } from "react-native";
 
-// Kitap bilgisini prop olarak alacak şekilde düzenlendi
+
 type BookListCardProps = {
   book: any;
 };
 
 const BookListCard: React.FC<BookListCardProps> = ({ book }) => {
   const router = useRouter();
-  /*console.log("BookListCard book:", JSON.stringify(book));*/
-  // Eğer volumeInfo yoksa book'un kendisini kullan
   const volume = book.volumeInfo || book;
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -49,7 +47,7 @@ const styles = StyleSheet.create({
   card: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: Colors.light.acikKrem,
+    backgroundColor: Colors.light.background,
     borderRadius: 8,
     padding: 10,
     marginVertical: 6,
@@ -64,7 +62,6 @@ const styles = StyleSheet.create({
     height: 90,
     borderRadius: 4,
     marginRight: 12,
-    backgroundColor: "#eee",
   },
   info: {
     flex: 1,

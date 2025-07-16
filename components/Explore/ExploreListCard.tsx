@@ -12,7 +12,7 @@ interface ExploreListCardProps {
   cardWidth?: number;
   compact?: boolean;
   style?: object;
-  hideGenreName?: boolean; // yeni prop
+  hideGenreName?: boolean; 
 }
 
 const defaultColors = [
@@ -38,7 +38,7 @@ const ExploreListCard: React.FC<ExploreListCardProps> = ({
   cardWidth,
   compact,
   style,
-  hideGenreName, // yeni prop
+  hideGenreName, 
 }) => {
   const bgColor = color || (typeof index === 'number' ? defaultColors[index % defaultColors.length] : '#f5f5f5');
   return (
@@ -90,7 +90,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: '400',
     color: Colors.light.acikKrem,
-    textAlign: 'center',       // Metni ortala
+    textAlign: 'center',       
     width: '100%'
   },
 })

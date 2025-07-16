@@ -40,8 +40,9 @@ const SuggestedBooksCard: React.FC<SuggestedBooksCardProps> = ({
     return (
     <TouchableOpacity
       style={[styles.card, { width: screenWidth - 120 }]}
-      onPress={() => {
+      onPress={async () => {
         if (id) {
+          await new Promise(res => setTimeout(res, 200));
           router.push(`/book-detail/${id}`);
         }
       }}

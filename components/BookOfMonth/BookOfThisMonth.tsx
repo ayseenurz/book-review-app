@@ -1,7 +1,7 @@
+import { Colors } from "@/constants/Colors";
 import React, { useEffect, useState } from "react";
 import { ActivityIndicator, FlatList, StyleSheet, Text, View } from "react-native";
 import BookOfThisMonthCard from "./BookOfThisMonthCard";
-import { Colors } from "@/constants/Colors";
 
 interface Book {
   id: string;
@@ -15,9 +15,13 @@ interface Book {
   };
 }
 
+interface BookOfThisMonthProps {
+  onLoaded?: () => void;
+}
+
 const PAGE_SIZE = 5;
 
-const BookOfThisMonth: React.FC = () => {
+const BookOfThisMonth: React.FC<BookOfThisMonthProps> = ({ onLoaded }) => {
   const [allBooks, setAllBooks] = useState<Book[]>([]);
   const [displayedBooks, setDisplayedBooks] = useState<Book[]>([]);
   const [loading, setLoading] = useState(true);
@@ -53,33 +57,33 @@ const BookOfThisMonth: React.FC = () => {
         console.error("API Hatası:", error);
       } finally {
         setLoading(false);
+        if (onLoaded) onLoaded();
       }
     };
 
     fetchBooks();
   }, []);
 
-  // Sayfalama için displayedBooks güncelle
+  
   useEffect(() => {
     const nextBooks = allBooks.slice(0, page * PAGE_SIZE);
     setDisplayedBooks(nextBooks);
   }, [allBooks, page]);
 
   const loadMore = () => {
-    if (loadingMore) return; // Yükleme devam ediyorsa engelle
-    if (page * PAGE_SIZE >= allBooks.length) return; // Tüm kitaplar yüklendiyse dur
+    if (loadingMore) return; 
+    if (page * PAGE_SIZE >= allBooks.length) return; 
 
     setLoadingMore(true);
     setTimeout(() => {
       setPage((prev) => prev + 1);
       setLoadingMore(false);
-    }, 500); // küçük gecikme taklidi
+    }, 500); 
   };
 
   if (loading) return <ActivityIndicator size="large" style={{ marginTop: 20 }} />;
 
-  // FlatList'e gönderilen kitapları kontrol etmek için log ekle
-  /*console.log('BookOfThisMonth displayedBooks:', displayedBooks);*/
+  
 
   return (
     <View style={styles.container}>

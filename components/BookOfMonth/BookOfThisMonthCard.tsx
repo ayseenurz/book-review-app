@@ -34,7 +34,10 @@ const BookOfThisMonthCard: React.FC<BookCardProps> = ({ title, authors, thumbnai
   return (
     <TouchableOpacity
       style={[styles.card, { width: screenWidth - 64 }]}
-      onPress={() => router.push(`/book-detail/${id}`)}
+      onPress={async () => {
+        await new Promise(res => setTimeout(res, 200));
+        router.push(`/book-detail/${id}`);
+      }}
     >
       {thumbnail && <Image source={{ uri: thumbnail }} style={styles.image} />}
       <View style={styles.info}>
@@ -46,7 +49,7 @@ const BookOfThisMonthCard: React.FC<BookCardProps> = ({ title, authors, thumbnai
         id,
         title,
         authors,
-        coverUrl: thumbnail, // DÜZELTİLDİ
+        coverUrl: thumbnail, 
         publishedDate
       }} />
     </TouchableOpacity>

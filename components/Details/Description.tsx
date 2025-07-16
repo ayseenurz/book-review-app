@@ -11,7 +11,7 @@ const MAX_LINES = 4;
 const Description: React.FC<DescriptionProps> = ({ description = "" }) => {
   const [expanded, setExpanded] = useState(false);
 
-  // HTML taglerini temizle
+  // HTML taglerini temizlemek için
   const stripHtmlTags = (text: string) => text.replace(/<[^>]*>/g, '');
 
   const safeDescription = description || "";

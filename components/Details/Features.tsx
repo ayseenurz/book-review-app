@@ -2,15 +2,21 @@ import { Colors } from '@/constants/Colors';
 import { useUser } from '@clerk/clerk-expo';
 import React from 'react';
 import { Image, StyleSheet, Text, View } from 'react-native';
+import { useFavorites } from "@/components/FavoritesContext";
 
 interface FeaturesProps {
-  volume: any;
+  volume: any; 
 }
 
 const Features: React.FC<FeaturesProps> = ({ volume }) => {
   const { isLoaded, isSignedIn, user } = useUser();
-  {/*console.log('isLoaded:', isLoaded, 'isSignedIn:', isSignedIn, 'user:', user);*/}
+  const { favoritesCounts } = useFavorites();
+
   if (!volume) return null;
+
+  
+  const favoriteCount = favoritesCounts[volume.id] || 0;
+
   return (
     <View style={styles.container}>
       <View style={styles.iconWrapper}>
@@ -20,18 +26,18 @@ const Features: React.FC<FeaturesProps> = ({ volume }) => {
       <View style={styles.iconWrapper}>
         <Text style={styles.iconSeparator}>|</Text>
         <Image source={require("@/assets/icons/unchecked-bookmark.png")} style={styles.icon} resizeMode="contain" />
-        <Text style={styles.iconText}>count</Text>
+        <Text style={styles.iconText}>{favoriteCount}</Text>
       </View>
       <View style={styles.iconWrapper}>
         <Text style={styles.iconSeparator}>|</Text>
         <Image source={require("@/assets/icons/world.png")} style={styles.icon} resizeMode="contain" />
-        <Text style={styles.iconText}>{volume.language.toUpperCase()}</Text>
+        <Text style={styles.iconText}>{volume.language?.toUpperCase()}</Text>
       </View>
     </View>
-  )
-}
+  );
+};
 
-export default Features
+export default Features;
 
 const styles = StyleSheet.create({
   container: {
@@ -67,4 +73,4 @@ const styles = StyleSheet.create({
     fontSize: 24,
     color: Colors.light.koyuKahverengi,
   },
-})
+});

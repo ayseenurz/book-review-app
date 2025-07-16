@@ -1,6 +1,5 @@
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import ExploreListCard from "./ExploreListCard";
-// ... diğer importlar
 import { Colors } from "@/constants/Colors";
 import { useRouter } from "expo-router";
 
@@ -45,7 +44,7 @@ export default function Categories() {
             cardWidth={90}
             style={{ marginRight: 4 }}
             index={idx}
-            hideGenreName // sadece icon göster
+            hideGenreName // sadece icon göstermek için
           />
         ))}
       </ScrollView>

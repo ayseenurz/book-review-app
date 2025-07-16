@@ -1,13 +1,15 @@
+import { Colors } from "@/constants/Colors";
 import { router } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { ActivityIndicator, FlatList, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import PopularAuthorsCard from "./PopularAuthorsCard";
-import { Colors } from "@/constants/Colors";
 
 
+interface PopularAuthorsProps {
+  onLoaded?: () => void;
+}
 
-
-const PopularAuthors: React.FC = () => {
+const PopularAuthors: React.FC<PopularAuthorsProps> = ({ onLoaded }) => {
   const [authors, setAuthors] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -26,6 +28,7 @@ const PopularAuthors: React.FC = () => {
       .catch((error) => console.error("API hatası:", error))
       .finally(() => {
         setLoading(false);
+        if (onLoaded) onLoaded();
       });
   }, []);
 

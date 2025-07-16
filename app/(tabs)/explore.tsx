@@ -100,12 +100,12 @@ const Explore = () => {
     setInputValue(search);
   };
 
-  // Her input değişiminde arama tetiklenecek şekilde inputValue güncellenir
+  // her input değişiminde arama tetiklenecek şekilde inputValue güncellenir
   useEffect(() => {
     setInputValue(search);
   }, [search]);
 
-  // Tab değişiminde veya sayfa odaklandığında arama sonuçlarını temizle
+  // tab değişiminde veya sayfa odaklandığında arama sonuçlarını temizle
   useFocusEffect(
     React.useCallback(() => {
       return () => {

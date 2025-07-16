@@ -1,30 +1,27 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import { View, Text, SafeAreaView, FlatList, StyleSheet, ActivityIndicator } from 'react-native';
-import BookListCard from '../BookList/BookListCard';
-import { useFocusEffect } from 'expo-router';
-import { db } from '@/configs/FirebaseConfig';
-import { useUser } from '@clerk/clerk-expo';
-import { collection, getDocs } from 'firebase/firestore';
-
-// Firestore'dan kullanıcının favori kitap id'lerini çekip, Google Books API'dan kitap detaylarını getir
+import LoadingScreen from "@/components/LoadingScreen";
+import { db } from "@/configs/FirebaseConfig";
+import { useUser } from "@clerk/clerk-expo";
+import { useFocusEffect } from "expo-router";
+import { collection, getDocs } from "firebase/firestore";
+import React, { useCallback, useEffect, useState } from "react";
+import { FlatList, SafeAreaView, StyleSheet, Text, View } from "react-native";
+import BookListCard from "../BookList/BookListCard";
 
 const Bookmark = () => {
   const { isLoaded, isSignedIn, user } = useUser();
   const [bookDetails, setBookDetails] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // Firestore'dan favori kitap id'lerini çek
   const fetchFavoriteBookIds = async (): Promise<string[]> => {
     if (!isLoaded || !isSignedIn || !user?.id) return [];
     try {
       const snap = await getDocs(collection(db, "Favorites", user.id, "books"));
-      return snap.docs.map(doc => doc.id);
+      return snap.docs.map((doc) => doc.id);
     } catch (e) {
       return [];
     }
   };
 
-  // Google Books API'dan kitap detaylarını çek
   const fetchBookDetails = async (ids: string[]) => {
     if (!ids || ids.length === 0) {
       setBookDetails([]);
@@ -33,18 +30,17 @@ const Bookmark = () => {
     }
     setLoading(true);
     try {
-      // Google Books API'dan kitapları sırayla çek (çok fazla kitap varsa optimize edilebilir)
       const results: any[] = [];
       for (const id of ids) {
         try {
-          const res = await fetch(`https://www.googleapis.com/books/v1/volumes/${id}`);
+          const res = await fetch(
+            `https://www.googleapis.com/books/v1/volumes/${id}`
+          );
           const data = await res.json();
           if (data && data.id && data.volumeInfo) {
             results.push(data);
           }
-        } catch (err) {
-          // Hatalı kitap atlanır
-        }
+        } catch (err) {}
       }
       setBookDetails(results);
     } catch (e) {
@@ -53,7 +49,6 @@ const Bookmark = () => {
     setLoading(false);
   };
 
-  // Sayfa her odaklandığında Firestore'dan güncel favori kitapları çek
   useFocusEffect(
     useCallback(() => {
       let isActive = true;
@@ -65,11 +60,12 @@ const Bookmark = () => {
         }
       };
       load();
-      return () => { isActive = false; };
+      return () => {
+        isActive = false;
+      };
     }, [isLoaded, isSignedIn, user?.id])
   );
 
-  // İlk açılışta da yükle (ekstra güvence)
   useEffect(() => {
     let isActive = true;
     const load = async () => {
@@ -80,36 +76,83 @@ const Bookmark = () => {
       }
     };
     load();
-    return () => { isActive = false; };
+    return () => {
+      isActive = false;
+    };
   }, [isLoaded, isSignedIn, user?.id]);
 
   return (
-    <SafeAreaView style={{ flex: 1, padding: 16 }}>
-      <Text style={styles.title}>Favori Kitaplarım</Text>
+    <SafeAreaView style={styles.container}>
+      <View style={styles.header}>
+        <Text style={styles.title}>Favori Kitaplarım</Text>
+        <Text style={styles.count}>
+          Toplamda <Text style={styles.countNumber}>{bookDetails.length}</Text>{" "}
+          kitap favorilere eklenmiş.
+        </Text>
+      </View>
+
       {!isLoaded || !isSignedIn ? (
-        <Text style={{ marginTop: 32, color: '#888' }}>Favori kitaplarınızı görmek için giriş yapmalısınız.</Text>
+        <Text style={styles.infoText}>
+          Favori kitaplarınızı görmek için giriş yapmalısınız.
+        </Text>
       ) : loading ? (
-        <ActivityIndicator style={{ marginTop: 32 }} size="large" />
+        <LoadingScreen />
       ) : bookDetails.length === 0 ? (
-        <Text style={{ marginTop: 32, color: '#888' }}>Henüz favorilere kitap eklemediniz.</Text>
+        <Text style={styles.infoText}>
+          Henüz favorilere kitap eklemediniz. 🌱
+        </Text>
       ) : (
         <FlatList
           data={bookDetails}
-          keyExtractor={item => item.id}
-          renderItem={({ item }) => <BookListCard book={item} />}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => (
+            <View style={styles.cardWrapper}>
+              <BookListCard book={item} />
+            </View>
+          )}
+          contentContainerStyle={{ paddingBottom: 16 }}
         />
       )}
+      <View style={{ height: 50 }}></View>
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
-  title: {
+  container: {
+    flex: 1,
     paddingHorizontal: 16,
+  },
+  header: {
+    marginTop: 24,
+    marginBottom: 12,
+    paddingVertical: 12,
+    paddingHorizontal: 12,
+    borderRadius: 12,
+  },
+  title: {
     fontSize: 22,
-    fontWeight: 'bold',
-    marginBottom: 16,
-    color: '#222',
+    fontWeight: "bold",
+    color: "#4e342e",
+  },
+  count: {
+    fontSize: 14,
+    color: "#6c584c",
+    marginTop: 4,
+  },
+  countNumber: {
+    fontWeight: "bold",
+    color: "#3e2723",
+  },
+  infoText: {
+    textAlign: "center",
+    marginTop: 48,
+    fontSize: 16,
+    color: "#888",
+  },
+  cardWrapper: {
+    marginVertical: 8,
+    borderRadius: 12,
   },
 });
 

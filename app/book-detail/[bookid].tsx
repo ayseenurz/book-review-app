@@ -2,10 +2,11 @@ import Comments from "@/components/Details/Comments";
 import Description from "@/components/Details/Description";
 import Features from "@/components/Details/Features";
 import Intro from "@/components/Details/Intro";
+import LoadingScreen from "@/components/LoadingScreen";
 import { useUser } from "@clerk/clerk-expo";
 import { useLocalSearchParams } from "expo-router";
 import React, { useEffect, useState } from "react";
-import { ActivityIndicator, KeyboardAvoidingView, Platform, SafeAreaView, ScrollView, Text } from "react-native";
+import { KeyboardAvoidingView, Platform, SafeAreaView, ScrollView, Text } from "react-native";
 
 const GOOGLE_BOOKS_API_KEY = "AIzaSyDirdTKGcJsDXi5yGqGKmfXV2LWHMsSE5c";
 
@@ -26,9 +27,7 @@ const BookDetail = () => {
     if (!bookid) return;
     setLoading(true);
     setError(null);
-    const url = `https://www.googleapis.com/books/v1/volumes/${bookid}${
-      GOOGLE_BOOKS_API_KEY ? `?key=${GOOGLE_BOOKS_API_KEY}` : ""
-    }`;
+    const url = `https://www.googleapis.com/books/v1/volumes/${bookid}${GOOGLE_BOOKS_API_KEY ? `?key=${GOOGLE_BOOKS_API_KEY}` : ""}`;
     fetch(url)
       .then((res) => res.json())
       .then((data) => {
@@ -38,19 +37,19 @@ const BookDetail = () => {
         } else {
           console.log('Bu kitap için kategori bilgisi yok.');
         }
-        setLoading(false);
+        setTimeout(() => setLoading(false), 1000);
       })
       .catch(() => {
         setError("Kitap bulunamadı.");
-        setLoading(false);
+        setTimeout(() => setLoading(false), 1000);
       });
   }, [bookid]);
 
-  if (!isLoaded) return <ActivityIndicator style={{ marginTop: 32 }} size="large" />;
+  if (!isLoaded) return <LoadingScreen />;
   if (!isSignedIn) return <Text style={{ color: 'red', marginTop: 32 }}>Giriş yapmalısınız.</Text>;
 
   if (loading)
-    return <ActivityIndicator style={{ marginTop: 32 }} size="large" />;
+    return <LoadingScreen />;
   if (error || !book)
     return (
       <Text style={{ color: "red", marginTop: 32 }}>

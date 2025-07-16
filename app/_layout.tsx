@@ -11,8 +11,9 @@ import { useColorScheme } from "../hooks/useColorScheme";
 import * as SecureStore from "expo-secure-store";
 import { ClerkProvider, SignedIn, SignedOut } from "@clerk/clerk-expo";
 import LoginScreen from "@/components/LoginScreen";
-import CategoryListScreen from "./category-list/[genre]";
+import CustomToast from "@/components/CustomToast";
 import { FavoritesProvider } from "@/components/FavoritesContext";
+import { useState } from "react";
 
 const tokenCache = {
   async getToken(key: string) {
@@ -38,10 +39,13 @@ export default function RootLayout() {
     SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
   });
 
+  
+  const [toastVisible, setToastVisible] = useState(false);
+
   if (!loaded) {
-    // Async font loading only occurs in development.
     return null;
   }
+
   return (
     <ClerkProvider
       publishableKey={process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY!}
@@ -64,11 +68,13 @@ export default function RootLayout() {
                 <Stack.Screen name="+not-found" />
               </Stack>
               <StatusBar style="auto" />
+
+              
+              <CustomToast visible={toastVisible} message="İşlem başarılı!" />
             </SignedIn>
             <SignedOut>
               <LoginScreen />
             </SignedOut>
-            {/* Ensure that the StatusBar is always visible */}
           </ThemeProvider>
         </SearchResultsProvider>
       </FavoritesProvider>

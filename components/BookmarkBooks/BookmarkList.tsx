@@ -9,13 +9,13 @@ const addToBookmarks = async (book: any) => {
   try {
     const json = await AsyncStorage.getItem(BOOKMARKS_KEY);
     let bookmarks = json ? JSON.parse(json) : [];
-    // Aynı kitap tekrar eklenmesin
+    
     if (!bookmarks.some((b: any) => b.id === book.id)) {
       bookmarks.push(book);
       await AsyncStorage.setItem(BOOKMARKS_KEY, JSON.stringify(bookmarks));
     }
   } catch (e) {
-    // Hata yönetimi
+    
   }
 };
 

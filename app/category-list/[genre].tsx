@@ -1,15 +1,15 @@
 import CategoriesListCard from "@/components/Explore/CategoriesListCard";
+import LoadingScreen from "@/components/LoadingScreen";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import {
-  ActivityIndicator,
   FlatList,
   Image,
   SafeAreaView,
   StyleSheet,
   Text,
   TouchableOpacity,
-  View,
+  View
 } from "react-native";
 
 
@@ -125,16 +125,16 @@ const CategoryListScreen = () => {
           return matchesCategory(googleCategories, genre as string);
         });
         setResults(filtered);
-        setLoading(false);
+        setTimeout(() => setLoading(false), 1000);
       })
       .catch((err) => {
         setError("Bir hata oluştu.");
-        setLoading(false);
+        setTimeout(() => setLoading(false), 1000);
       });
   }, [genre]);
 
   if (loading)
-    return <ActivityIndicator style={{ marginTop: 32 }} size="large" />;
+    return <LoadingScreen />;
   if (error)
     return <Text style={{ color: "red", marginTop: 32 }}>{error}</Text>;
 

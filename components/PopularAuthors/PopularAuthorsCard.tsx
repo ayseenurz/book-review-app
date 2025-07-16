@@ -3,7 +3,7 @@ import { StyleSheet, Text, View } from "react-native";
 
 interface AuthorCardProps {
   name: string;
-  backgroundColor?: string; // dışarıdan opsiyonel renk al
+  backgroundColor?: string; 
 }
 
 const PopularAuthorsCard: React.FC<AuthorCardProps> = ({ name, backgroundColor = "#f5f5f5" }) => {

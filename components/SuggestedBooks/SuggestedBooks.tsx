@@ -1,4 +1,3 @@
-import { useFavorites } from "@/components/FavoritesContext";
 import { Colors } from "@/constants/Colors";
 import { router } from "expo-router";
 import React, { useEffect, useState } from "react";
@@ -17,8 +16,11 @@ interface Book {
   };
 }
 
+interface SuggestedBooksProps {
+  onLoaded?: () => void;
+}
 
-const SuggestedBooks: React.FC = (favorites) => {
+const SuggestedBooks: React.FC<SuggestedBooksProps> = ({ onLoaded }) => {
   const [books, setBooks] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   
@@ -33,6 +35,7 @@ const SuggestedBooks: React.FC = (favorites) => {
       .catch((error) => console.error("API hatası:", error))
       .finally(() => {
         setLoading(false);
+        if (onLoaded) onLoaded();
       });
   }, []);
   
