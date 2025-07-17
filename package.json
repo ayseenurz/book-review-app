@@ -43,6 +43,7 @@
     "install": "^0.13.0",
     "jose": "^6.0.11",
     "lottie-react-native": "7.2.2",
+    "moti": "^0.30.0",
     "npm": "^11.4.2",
     "react": "19.0.0",
     "react-dom": "19.0.0",

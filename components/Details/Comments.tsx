@@ -72,6 +72,16 @@ const Comments: React.FC<CommentsProps> = ({ bookId }) => {
 
   return (
     <View style={styles.container}>
+      <Text
+        style={{
+          fontSize: 18,
+          fontWeight: "bold",
+          color: "#6B4F27",
+          marginBottom: 8,
+        }}
+      >
+        Yorumlar
+      </Text>
       <View style={styles.inputRow}>
         <TextInput
           style={styles.input}
@@ -80,7 +90,11 @@ const Comments: React.FC<CommentsProps> = ({ bookId }) => {
           placeholder="Yorumunuzu yazın..."
         />
         <TouchableOpacity onPress={handleSend}>
-          <Image source={require("@/assets/icons/message.png")} style={styles.sendButton} resizeMode="contain" />
+          <Image
+            source={require("@/assets/icons/message.png")}
+            style={styles.sendButton}
+            resizeMode="contain"
+          />
         </TouchableOpacity>
       </View>
       <View style={styles.ratingRow}>

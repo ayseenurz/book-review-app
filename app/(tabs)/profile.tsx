@@ -56,7 +56,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    backgroundColor: '#fff',
+    backgroundColor: "#FFFBF9",
     paddingTop: 40,
   },
   avatarContainer: {

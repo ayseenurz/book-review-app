@@ -13,9 +13,11 @@ import {
   TouchableWithoutFeedback,
   View,
 } from "react-native";
-import ExploreListCard from "../../components/Explore/ExploreListCard";
+import CategoryListCard from "../../components/Explore/CategoryCard";
 import { useSearchResults } from "../../components/SearchResultsContext";
 import BookListCard from "../BookList/BookListCard";
+import CategoryCard from "../../components/Explore/CategoryCard";
+import { MotiView } from "moti";
 
 const Explore = () => {
   const router = useRouter();
@@ -160,7 +162,7 @@ const Explore = () => {
             numColumns={2}
             contentContainerStyle={{ padding: 12 }}
             renderItem={({ item, index }) => (
-              <ExploreListCard
+              <CategoryCard
                 genre={item}
                 onPress={() => {
                   setSearch(item);
@@ -168,6 +170,7 @@ const Explore = () => {
                 }}
                 index={index}
                 image={genreImages[item]}
+                animationAxis="y"
               />
             )}
           />
@@ -188,7 +191,20 @@ const Explore = () => {
             <FlatList
               data={results}
               keyExtractor={(item) => item.id}
-              renderItem={({ item }) => <BookListCard book={item} />}
+              renderItem={({ item, index }) => (
+                <MotiView
+                  from={{ opacity: 0, translateY: 40 }}
+                  animate={{ opacity: 1, translateY: 0 }}
+                  transition={{
+                    type: "timing",
+                    duration: 400,
+                    delay: index * 100,
+                  }}
+                  style={{ marginVertical: 8 }}
+                >
+                  <BookListCard book={item} />
+                </MotiView>
+              )}
               ListFooterComponent={
                 loading ? (
                   <Text style={styles.loadingText}>Yükleniyor...</Text>

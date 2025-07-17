@@ -1,7 +1,14 @@
 import { Colors } from "@/constants/Colors";
 import React, { useEffect, useState } from "react";
-import { ActivityIndicator, FlatList, StyleSheet, Text, View } from "react-native";
+import {
+  ActivityIndicator,
+  FlatList,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import BookOfThisMonthCard from "./BookOfThisMonthCard";
+import { MotiView } from "moti";
 
 interface Book {
   id: string;
@@ -44,7 +51,10 @@ const BookOfThisMonth: React.FC<BookOfThisMonthProps> = ({ onLoaded }) => {
           const dateStr = item.volumeInfo.publishedDate;
           if (!dateStr) return false;
           const date = new Date(dateStr);
-          return date.getMonth() === currentMonth && date.getFullYear() === currentYear;
+          return (
+            date.getMonth() === currentMonth &&
+            date.getFullYear() === currentYear
+          );
         });
 
         if (filtered.length > 0) {
@@ -64,27 +74,23 @@ const BookOfThisMonth: React.FC<BookOfThisMonthProps> = ({ onLoaded }) => {
     fetchBooks();
   }, []);
 
-  
   useEffect(() => {
     const nextBooks = allBooks.slice(0, page * PAGE_SIZE);
     setDisplayedBooks(nextBooks);
   }, [allBooks, page]);
 
   const loadMore = () => {
-    if (loadingMore) return; 
-    if (page * PAGE_SIZE >= allBooks.length) return; 
+    if (loadingMore) return;
+    if (page * PAGE_SIZE >= allBooks.length) return;
 
     setLoadingMore(true);
     setTimeout(() => {
       setPage((prev) => prev + 1);
       setLoadingMore(false);
-    }, 500); 
+    }, 500);
   };
 
-  if (loading) return <ActivityIndicator size="large" style={{ marginTop: 20 }} />;
-
   
-
   return (
     <View style={styles.container}>
       <Text style={styles.title}>
@@ -96,19 +102,31 @@ const BookOfThisMonth: React.FC<BookOfThisMonthProps> = ({ onLoaded }) => {
         horizontal
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={{ paddingRight: 16 }}
-        renderItem={({ item }) => (
-          <BookOfThisMonthCard
-            id={item.id}
-            title={item.volumeInfo.title}
-            authors={item.volumeInfo.authors}
-            thumbnail={item.volumeInfo.imageLinks?.thumbnail}
-            publishedDate={item.volumeInfo.publishedDate}
-          />
+        renderItem={({ item, index }) => (
+          <MotiView
+            from={{ opacity: 0, translateX: 20 }}
+            animate={{ opacity: 1, translateX: 0 }}
+            transition={{
+              type: "timing",
+              duration: 500,
+              delay: index * 100,
+            }}
+          >
+            <BookOfThisMonthCard
+              id={item.id}
+              title={item.volumeInfo.title}
+              authors={item.volumeInfo.authors}
+              thumbnail={item.volumeInfo.imageLinks?.thumbnail}
+              publishedDate={item.volumeInfo.publishedDate}
+            />
+          </MotiView>
         )}
         initialNumToRender={5}
         onEndReached={loadMore}
         onEndReachedThreshold={0.5}
-        ListFooterComponent={loadingMore ? <ActivityIndicator size="small" /> : null}
+        ListFooterComponent={
+          loadingMore ? <ActivityIndicator size="small" /> : null
+        }
       />
     </View>
   );

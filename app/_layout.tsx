@@ -1,3 +1,4 @@
+import "react-native-reanimated";
 import {
   DarkTheme,
   DefaultTheme,
@@ -14,6 +15,7 @@ import LoginScreen from "@/components/LoginScreen";
 import CustomToast from "@/components/CustomToast";
 import { FavoritesProvider } from "@/components/FavoritesContext";
 import { useState } from "react";
+import { HomeDataProvider } from "./(tabs)/contexts/HomeDataContext";
 
 const tokenCache = {
   async getToken(key: string) {
@@ -39,7 +41,6 @@ export default function RootLayout() {
     SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
   });
 
-  
   const [toastVisible, setToastVisible] = useState(false);
 
   if (!loaded) {
@@ -51,33 +52,34 @@ export default function RootLayout() {
       publishableKey={process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY!}
       tokenCache={tokenCache}
     >
-      <FavoritesProvider>
-        <SearchResultsProvider>
-          <ThemeProvider
-            value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
-          >
-            <SignedIn>
-              <Stack
-                screenOptions={{
-                  headerShown: false,
-                }}
-              >
-                <Stack.Screen name="(tabs)" />
-                <Stack.Screen name="index" />
-                <Stack.Screen name="category-list/[genre]" />
-                <Stack.Screen name="+not-found" />
-              </Stack>
-              <StatusBar style="auto" />
+      <HomeDataProvider>
+        <FavoritesProvider>
+          <SearchResultsProvider>
+            <ThemeProvider
+              value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
+            >
+              <SignedIn>
+                <Stack
+                  screenOptions={{
+                    headerShown: false,
+                  }}
+                >
+                  <Stack.Screen name="(tabs)" />
+                  <Stack.Screen name="index" />
+                  <Stack.Screen name="category-list/[genre]" />
+                  <Stack.Screen name="+not-found" />
+                </Stack>
+                <StatusBar style="auto" />
 
-              
-              <CustomToast visible={toastVisible} message="İşlem başarılı!" />
-            </SignedIn>
-            <SignedOut>
-              <LoginScreen />
-            </SignedOut>
-          </ThemeProvider>
-        </SearchResultsProvider>
-      </FavoritesProvider>
+                <CustomToast visible={toastVisible} message="İşlem başarılı!" />
+              </SignedIn>
+              <SignedOut>
+                <LoginScreen />
+              </SignedOut>
+            </ThemeProvider>
+          </SearchResultsProvider>
+        </FavoritesProvider>
+      </HomeDataProvider>
     </ClerkProvider>
   );
 }

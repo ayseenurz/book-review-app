@@ -40,7 +40,7 @@ const Home = () => {
   const onRefresh = useCallback(() => {
     setRefreshing(true);
     fetchData();
-    setTimeout(() => setRefreshing(false), 1500);
+    setTimeout(() => setRefreshing(false), 1800);
   }, [fetchData]);
 
   if (!allLoaded) {
@@ -48,13 +48,12 @@ const Home = () => {
   }
 
   return (
-    <SafeAreaView style={{ flex: 1, padding: 10, backgroundColor: '#fff' }}>
+    <SafeAreaView style={styles.safeArea}>
       <Header />
       <ScrollView
-        style={{ flex: 1 }}
+        style={styles.scrollView}
         refreshControl={
           <RefreshControl
-            
             refreshing={refreshing}
             onRefresh={onRefresh}
             colors={["#6c584c"]}
@@ -72,21 +71,13 @@ const Home = () => {
 };
 
 const styles = StyleSheet.create({
-  loadingOverlay: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    right: 0,
-    // Sayfanın üst kısmında, içerik üzerinde gösterilecek şekilde
-    alignItems: "center",
-    marginTop: 32,
-    zIndex: 10,
+  safeArea: {
+    flex: 1,
+    padding: 10,
+    backgroundColor: "#FFFBF9",
   },
-  loadingText: {
-    marginTop: 16,
-    fontSize: 18,
-    color: "#888",
-    fontWeight: "bold",
+  scrollView: {
+    flex: 1,
   },
 });
 

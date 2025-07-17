@@ -6,6 +6,8 @@ import { collection, getDocs } from "firebase/firestore";
 import React, { useCallback, useEffect, useState } from "react";
 import { FlatList, SafeAreaView, StyleSheet, Text, View } from "react-native";
 import BookListCard from "../BookList/BookListCard";
+import { Colors } from "@/constants/Colors";
+import { MotiView } from "moti";
 
 const Bookmark = () => {
   const { isLoaded, isSignedIn, user } = useUser();
@@ -105,10 +107,19 @@ const Bookmark = () => {
         <FlatList
           data={bookDetails}
           keyExtractor={(item) => item.id}
-          renderItem={({ item }) => (
-            <View style={styles.cardWrapper}>
+          renderItem={({ item, index }) => (
+            <MotiView
+              from={{ opacity: 0, translateY: 40 }}
+              animate={{ opacity: 1, translateY: 0 }}
+              transition={{
+                type: "timing",
+                duration: 400,
+                delay: index * 100,
+              }}
+              style={styles.cardWrapper}
+            >
               <BookListCard book={item} />
-            </View>
+            </MotiView>
           )}
           contentContainerStyle={{ paddingBottom: 16 }}
         />
@@ -122,18 +133,18 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: 16,
+    backgroundColor: "#FFFBF9",
   },
   header: {
     marginTop: 24,
     marginBottom: 12,
-    paddingVertical: 12,
-    paddingHorizontal: 12,
-    borderRadius: 12,
+    paddingVertical: 18,
+    paddingHorizontal: 24,
   },
   title: {
-    fontSize: 22,
+    fontSize: 24,
     fontWeight: "bold",
-    color: "#4e342e",
+    color: Colors.light.koyuKahverengi,
   },
   count: {
     fontSize: 14,

@@ -1,7 +1,7 @@
-import { ScrollView, StyleSheet, Text, View } from "react-native";
-import ExploreListCard from "./ExploreListCard";
 import { Colors } from "@/constants/Colors";
 import { useRouter } from "expo-router";
+import { ScrollView, StyleSheet, Text, View } from "react-native";
+import CategoryCard from "./CategoryCard";
 
 const categories = [
   { genre: "Çocuk", image: require("@/assets/icons/child.png") },
@@ -29,7 +29,7 @@ export default function Categories() {
         contentContainerStyle={{ paddingHorizontal: 8 }}
       >
         {categories.map((cat, idx) => (
-          <ExploreListCard
+          <CategoryCard
             key={cat.genre}
             genre={cat.genre}
             onPress={() => {
@@ -44,6 +44,7 @@ export default function Categories() {
             cardWidth={90}
             style={{ marginRight: 4 }}
             index={idx}
+            animationAxis="x"
             hideGenreName // sadece icon göstermek için
           />
         ))}

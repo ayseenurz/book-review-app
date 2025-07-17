@@ -1,5 +1,6 @@
 import CategoriesListCard from "@/components/Explore/CategoriesListCard";
 import LoadingScreen from "@/components/LoadingScreen";
+import { Colors } from "@/constants/Colors";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import {
@@ -9,20 +10,19 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
-  View
+  View,
 } from "react-native";
 
-
 const CATEGORY_KEYWORDS: Record<string, string[]> = {
-  "Fantastik": [
+  Fantastik: [
     "fantasy",
     "fantastik",
-    "Art / Subjects & Themes / Science Fiction & Fantasy"
+    "Art / Subjects & Themes / Science Fiction & Fantasy",
   ],
-  "Korku": ["horror", "korku", "supernatural"],
-  "Tarih": ["history", "tarih", "historical"],
-  "Çocuk": ["child", "children", "çocuk", "juvenile", "Juvenile Nonfiction"],
-  "Biyografi": ["biography", "biyografi"],
+  Korku: ["horror", "korku", "supernatural"],
+  Tarih: ["history", "tarih", "historical"],
+  Çocuk: ["child", "children", "çocuk", "juvenile", "Juvenile Nonfiction"],
+  Biyografi: ["biography", "biyografi"],
   "Bilim Kurgu": [
     "science fiction",
     "bilim kurgu",
@@ -30,9 +30,9 @@ const CATEGORY_KEYWORDS: Record<string, string[]> = {
     "Art / Subjects & Themes / Science Fiction & Fantasy",
     "Technology & Engineering / Robotics",
     "Computers / Artificial Intelligence / General",
-    "Science / Mechanics / General"
+    "Science / Mechanics / General",
   ],
-  "Roman": ["novel", "roman"],
+  Roman: ["novel", "roman"],
   "Kişisel Gelişim": ["self-help", "kişisel gelişim", "personal growth"],
   "İş Dünyası ve Ekonomi": [
     "business",
@@ -42,7 +42,7 @@ const CATEGORY_KEYWORDS: Record<string, string[]> = {
     "Business & Economics / Accounting / General",
     "Business & Economics / Insurance / Health",
     "Business & Economics / Development / General",
-    "Business & Economics / General", 
+    "Business & Economics / General",
     "Business & Economics / Banks & Banking",
     "Business & Economics / Economic Conditions",
     "Business & Economics / Economics / Theory",
@@ -54,7 +54,7 @@ const CATEGORY_KEYWORDS: Record<string, string[]> = {
     "Business & Economics / Economics / Comparative",
     "Business & Economics / Public Relations",
     "Business & Economics / Research & Development",
-    "Business & Economics / Economic History"
+    "Business & Economics / Economic History",
   ],
   "Teknoloji ve Mühendislik": [
     "technology",
@@ -65,7 +65,7 @@ const CATEGORY_KEYWORDS: Record<string, string[]> = {
     "Science & Technology",
     "Technology & Engineering / Robotics",
     "Computers / Artificial Intelligence / General",
-    "Science / Mechanics / General"
+    "Science / Mechanics / General",
   ],
   "Sosyal Bilimler": [
     "social science",
@@ -86,17 +86,20 @@ const CATEGORY_KEYWORDS: Record<string, string[]> = {
     "Political Science / International Relations / Diplomacy",
     "Political Science / International Relations / General",
     "Political Science / World / Middle Eastern",
-    "Business & Economics / Education"
+    "Business & Economics / Education",
   ],
-  "Din": ["religion", "din", "Religion / Islam"],
+  Din: ["religion", "din", "Religion / Islam"],
 };
 
-function matchesCategory(googleCategories: string[] | undefined, appCategory: string): boolean {
+function matchesCategory(
+  googleCategories: string[] | undefined,
+  appCategory: string
+): boolean {
   if (!googleCategories) return false;
   const keywords = CATEGORY_KEYWORDS[appCategory];
   if (!keywords) return false;
-  return googleCategories.some(cat =>
-    keywords.some(keyword =>
+  return googleCategories.some((cat) =>
+    keywords.some((keyword) =>
       cat.toLowerCase().includes(keyword.toLowerCase())
     )
   );
@@ -133,27 +136,27 @@ const CategoryListScreen = () => {
       });
   }, [genre]);
 
-  if (loading)
-    return <LoadingScreen />;
+  if (loading) return <LoadingScreen />;
   if (error)
     return <Text style={{ color: "red", marginTop: 32 }}>{error}</Text>;
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
+      <View style={styles.topBar}>
+        <TouchableOpacity
+          onPress={() => router.back()}
+          style={styles.backButtonContainer}
+        >
+          <Image
+            source={require("@/assets/icons/back.png")}
+            style={styles.backButton}
+            resizeMode="contain"
+          />
+        </TouchableOpacity>
+        <Text style={styles.centeredTitle}>{genre} Kategorisi</Text>
+        <View style={{ width: 40 }} />
+      </View>
       <View style={styles.container}>
-        <View style={styles.header}>
-          <TouchableOpacity
-            onPress={() => router.back()}
-            style={styles.backButtonContainer}
-          >
-            <Image
-              source={require("@/assets/icons/back.png")}
-              style={styles.backButton}
-              resizeMode="contain"
-            />
-          </TouchableOpacity>
-          <Text style={styles.title}>{genre} Kategorisi</Text>
-        </View>
         <FlatList
           data={results}
           keyExtractor={(item) => item.id}
@@ -164,7 +167,22 @@ const CategoryListScreen = () => {
               thumbnail={item.volumeInfo.imageLinks?.thumbnail}
             />
           )}
-          ListEmptyComponent={<Text>Bu kategoride kitap bulunamadı.</Text>}
+          contentContainerStyle={{ flexGrow: 1, justifyContent: 'center' }}
+          ListEmptyComponent={
+            <View
+              style={{
+                flex: 1,
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Image
+                source={require("../../assets/icons/no-results.png")}
+                style={{ width: 50, height: 50, opacity:0.5 }}
+              />
+              <Text style={{ color: Colors.light.koyuKahverengi, marginTop: 12 }}>Bu kategoride kitap bulunamadı.</Text>
+            </View>
+          }
         />
       </View>
     </SafeAreaView>
@@ -178,27 +196,32 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 16,
   },
+  topBar: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingHorizontal: 8,
+    paddingTop: 8,
+    marginBottom: 8,
+  },
   backButton: {
     width: 24,
     height: 24,
-    marginBottom: 16,
-    marginRight: 80,
-  },
-  title: {
-    fontSize: 16,
-    fontWeight: "bold",
-    marginBottom: 12,
-  },
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "flex-start",
   },
   backButtonContainer: {
     flexDirection: "row",
     alignItems: "center",
     paddingVertical: 4,
-    paddingHorizontal: 8,
+    paddingHorizontal: 0,
     alignSelf: "flex-start",
+    width: 40,
+    justifyContent: "flex-start",
+  },
+  centeredTitle: {
+    flex: 1,
+    textAlign: "center",
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 0,
   },
 });

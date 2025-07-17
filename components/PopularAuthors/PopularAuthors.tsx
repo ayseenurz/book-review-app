@@ -3,6 +3,7 @@ import { router } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { ActivityIndicator, FlatList, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import PopularAuthorsCard from "./PopularAuthorsCard";
+import { MotiView } from "moti";
 
 
 interface PopularAuthorsProps {
@@ -32,9 +33,7 @@ const PopularAuthors: React.FC<PopularAuthorsProps> = ({ onLoaded }) => {
       });
   }, []);
 
-  if (loading) {
-    return <ActivityIndicator size="large" color="#000" style={{ marginTop: 20 }} />;
-  }
+  
   const colors = ["#a3917b", "#6c584c", "#c2b6a3", "#a89984", "#7a6f63"];
 
   return (
@@ -47,10 +46,21 @@ const PopularAuthors: React.FC<PopularAuthorsProps> = ({ onLoaded }) => {
           horizontal
           showsHorizontalScrollIndicator={false}
           renderItem={({ item, index }) => (
-            <TouchableOpacity onPress={() => router.push(`/author-detail/${encodeURIComponent(item)}`)}>
-              <PopularAuthorsCard name={item} backgroundColor={colors[index % colors.length]} />
-            </TouchableOpacity>
+            <MotiView
+              from={{ opacity: 0, translateX: 20 }}   // sağdan sola gelsin
+              animate={{ opacity: 1, translateX: 0 }}
+              transition={{
+                type: 'timing',
+                duration: 500,
+                delay: index * 100, // sıralı animasyon
+              }}
+            >
+              <TouchableOpacity onPress={() => router.push(`/author-detail/${encodeURIComponent(item)}`)}>
+                <PopularAuthorsCard name={item} backgroundColor={colors[index % colors.length]} />
+              </TouchableOpacity>
+            </MotiView>
           )}
+          
           contentContainerStyle={{ paddingBottom: 20 }}
         />
       </View>
