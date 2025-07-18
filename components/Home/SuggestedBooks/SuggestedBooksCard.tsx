@@ -3,7 +3,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import { Dimensions, Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import BookmarkButton from "../BookmarkButton";
+import BookmarkButton from "../../BookmarkButton";
 
 interface SuggestedBooksCardProps {
   title: string;
@@ -53,7 +53,7 @@ const SuggestedBooksCard: React.FC<SuggestedBooksCardProps> = ({
         <Text style={styles.authors}>{authors?.join(", ") || "Bilinmeyen yazar"}</Text>
         <Text style={styles.date}>{publishedDate}</Text>
       </View>
-      <BookmarkButton book={{ id, title, authors, coverUrl: thumbnail, publishedDate }} />
+      <BookmarkButton type="book" item={{ id, title, authors, coverUrl: thumbnail, publishedDate }} />
     </TouchableOpacity>
   );
 };

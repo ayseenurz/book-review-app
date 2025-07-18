@@ -42,7 +42,7 @@ const Search = () => {
         data={results}
         keyExtractor={item => item.id}
         renderItem={({ item }) => (
-          <BookListCard book={item} />
+          <BookListCard book={item} fullWidth />
         )}
         ListEmptyComponent={<Text>Sonuç bulunamadı.</Text>}
       />

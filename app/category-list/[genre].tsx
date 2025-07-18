@@ -1,4 +1,3 @@
-import CategoriesListCard from "@/components/Explore/CategoriesListCard";
 import LoadingScreen from "@/components/LoadingScreen";
 import { Colors } from "@/constants/Colors";
 import { useLocalSearchParams, useRouter } from "expo-router";
@@ -12,6 +11,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import BookListCard from "../BookList/BookListCard";
 
 const CATEGORY_KEYWORDS: Record<string, string[]> = {
   Fantastik: [
@@ -161,11 +161,7 @@ const CategoryListScreen = () => {
           data={results}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
-            <CategoriesListCard
-              title={item.volumeInfo.title}
-              authors={item.volumeInfo.authors}
-              thumbnail={item.volumeInfo.imageLinks?.thumbnail}
-            />
+            <BookListCard book={item} fullWidth cardHeight={130} horizontal />
           )}
           contentContainerStyle={{ flexGrow: 1, justifyContent: 'center' }}
           ListEmptyComponent={

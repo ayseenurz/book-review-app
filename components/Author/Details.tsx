@@ -1,15 +1,10 @@
-import React, { useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import BookmarkButton from "@/components/BookmarkButton";
 import { format, parseISO } from "date-fns";
 import { tr } from "date-fns/locale";
+import React from "react";
+import { StyleSheet, Text, View } from "react-native";
 
-const Details = ({
-  author,
-  detail,
-}: {
-  author: any;
-  detail?: any;
-}) => {
+const Details = ({ author, detail }: { author: any; detail?: any }) => {
   const birthPlace = detail?.birth_place;
   const deathDate = detail?.death_date;
   const deathPlace = detail?.death_place;
@@ -49,11 +44,27 @@ const Details = ({
 
   return (
     <View style={styles.detailsContainer}>
-      <Text style={styles.authorName}>{author.name}</Text>
+      <View style={styles.headerRow}>
+        <Text style={styles.authorName}>{author.name}</Text>
+        <View style={styles.bookmarkWrapper}>
+          <BookmarkButton
+            type="author"
+            item={{
+              id: author.id || author.authorId || author.key || author.name, // fallback olarak name
+              name: author.name,
+              birth_date: author.birth_date,
+              top_work: author.top_work,
+              work_count: author.work_count,
+            }}
+          />
+        </View>
+      </View>
       {summaryText ? (
         <Text style={styles.authorSummary}>{summaryText}</Text>
       ) : (
-        <Text style={styles.authorSummary}>Yazar hakkında ayrıntılı bilgi bulunamadı.</Text>
+        <Text style={styles.authorSummary}>
+          Yazar hakkında ayrıntılı bilgi bulunamadı.
+        </Text>
       )}
     </View>
   );
@@ -75,23 +86,36 @@ export default Details;
 
 const styles = StyleSheet.create({
   detailsContainer: {
-    justifyContent: "flex-start",
-    alignItems: "flex-start",
+    paddingHorizontal:16,
+    marginTop: 20,
     width: "100%",
+    marginBottom: 20,
+  },
+  headerRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    borderBottomWidth: 1,
+    borderBottomColor: "#E0D8CF",
+    paddingBottom: 8,
     marginBottom: 12,
-    marginTop: 24,
-    paddingHorizontal: 16,
   },
   authorName: {
-    fontSize: 32,
+    fontSize: 26,
     fontWeight: "bold",
     color: "#6c584c",
-    marginBottom: 20,
-    textAlign: "left",
+    flex: 1,
   },
   authorSummary: {
-    fontSize: 18,
-    color: "#666",
+    fontSize: 16,
+    color: "#555",
+    lineHeight: 22,
     textAlign: "left",
+  },
+  bookmarkWrapper: {
+    marginLeft: 12,
+    justifyContent: "center",
+    alignItems: "center",
+    height: 40,
+    width: 40,
   },
 });

@@ -1,17 +1,17 @@
 import React, { createContext, useContext, useState } from "react";
 
-interface HomeData {
+export interface HomeData {
   popularAuthors: string[];
   booksOfMonth: any[];
   suggestedBooks: any[];
 }
 
-interface HomeDataContextType {
+export interface HomeDataContextType {
   homeData: HomeData | null;
   setHomeData: React.Dispatch<React.SetStateAction<HomeData | null>>;
 }
 
-const HomeDataContext = createContext<HomeDataContextType | undefined>(undefined);
+export const HomeDataContext = createContext<HomeDataContextType | undefined>(undefined);
 
 export const HomeDataProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [homeData, setHomeData] = useState<HomeData | null>(null);

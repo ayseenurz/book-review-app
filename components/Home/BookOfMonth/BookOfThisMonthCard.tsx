@@ -1,9 +1,16 @@
 import BookmarkButton from "@/components/BookmarkButton";
 import { Colors } from "@/constants/Colors";
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRouter } from "expo-router";
 import * as React from "react";
-import { Dimensions, Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  Dimensions,
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
 interface BookCardProps {
   title: string;
@@ -16,7 +23,7 @@ interface BookCardProps {
 const screenWidth = Dimensions.get("window").width;
 const router = useRouter();
 
-const BOOKMARKS_KEY = 'BOOKMARKED_BOOKS';
+const BOOKMARKS_KEY = "BOOKMARKED_BOOKS";
 
 const addToBookmarks = async (book: any) => {
   try {
@@ -29,29 +36,34 @@ const addToBookmarks = async (book: any) => {
   } catch (e) {}
 };
 
-const BookOfThisMonthCard: React.FC<BookCardProps> = ({ title, authors, thumbnail, publishedDate, id }) => {
+const BookOfThisMonthCard: React.FC<BookCardProps> = ({
+  title,
+  authors,
+  thumbnail,
+  publishedDate,
+  id,
+}) => {
   const [bookmarked, setBookmarked] = React.useState(false);
   return (
     <TouchableOpacity
       style={[styles.card, { width: screenWidth - 64 }]}
       onPress={async () => {
-        await new Promise(res => setTimeout(res, 200));
+        await new Promise((res) => setTimeout(res, 200));
         router.push(`/book-detail/${id}`);
       }}
     >
       {thumbnail && <Image source={{ uri: thumbnail }} style={styles.image} />}
       <View style={styles.info}>
         <Text style={styles.title}>{title}</Text>
-        <Text style={styles.authors}>{authors?.join(", ") || "Bilinmeyen yazar"}</Text>
+        <Text style={styles.authors}>
+          {authors?.join(", ") || "Bilinmeyen yazar"}
+        </Text>
         <Text style={styles.date}>{publishedDate}</Text>
       </View>
-      <BookmarkButton book={{
-        id,
-        title,
-        authors,
-        coverUrl: thumbnail, 
-        publishedDate
-      }} />
+      <BookmarkButton
+        type="book"
+        item={{ id, title, authors, coverUrl: thumbnail, publishedDate }}
+      />
     </TouchableOpacity>
   );
 };

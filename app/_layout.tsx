@@ -1,4 +1,7 @@
-import "react-native-reanimated";
+import CustomToast from "@/components/CustomToast";
+import { FavoritesProvider } from "@/components/FavoritesContext";
+import LoginScreen from "@/components/LoginScreen";
+import { ClerkProvider, SignedIn, SignedOut } from "@clerk/clerk-expo";
 import {
   DarkTheme,
   DefaultTheme,
@@ -6,16 +9,14 @@ import {
 } from "@react-navigation/native";
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
-import { StatusBar } from "expo-status-bar";
-import { SearchResultsProvider } from "../components/SearchResultsContext";
-import { useColorScheme } from "../hooks/useColorScheme";
 import * as SecureStore from "expo-secure-store";
-import { ClerkProvider, SignedIn, SignedOut } from "@clerk/clerk-expo";
-import LoginScreen from "@/components/LoginScreen";
-import CustomToast from "@/components/CustomToast";
-import { FavoritesProvider } from "@/components/FavoritesContext";
+import { StatusBar } from "expo-status-bar";
 import { useState } from "react";
-import { HomeDataProvider } from "./(tabs)/contexts/HomeDataContext";
+import "react-native-reanimated";
+import { RecentlyViewedBooksProvider } from "../components/RecentlyViewedBooksContext";
+import { SearchResultsProvider } from "../components/SearchResultsContext";
+import { HomeDataProvider } from "../contexts/HomeDataContext";
+import { useColorScheme } from "../hooks/useColorScheme";
 
 const tokenCache = {
   async getToken(key: string) {
@@ -55,28 +56,30 @@ export default function RootLayout() {
       <HomeDataProvider>
         <FavoritesProvider>
           <SearchResultsProvider>
-            <ThemeProvider
-              value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
-            >
-              <SignedIn>
-                <Stack
-                  screenOptions={{
-                    headerShown: false,
-                  }}
-                >
-                  <Stack.Screen name="(tabs)" />
-                  <Stack.Screen name="index" />
-                  <Stack.Screen name="category-list/[genre]" />
-                  <Stack.Screen name="+not-found" />
-                </Stack>
-                <StatusBar style="auto" />
+            <RecentlyViewedBooksProvider>
+              <ThemeProvider
+                value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
+              >
+                <SignedIn>
+                  <Stack
+                    screenOptions={{
+                      headerShown: false,
+                    }}
+                  >
+                    <Stack.Screen name="(tabs)" />
+                    <Stack.Screen name="index" />
+                    <Stack.Screen name="category-list/[genre]" />
+                    <Stack.Screen name="+not-found" />
+                  </Stack>
+                  <StatusBar style="auto" />
 
-                <CustomToast visible={toastVisible} message="İşlem başarılı!" />
-              </SignedIn>
-              <SignedOut>
-                <LoginScreen />
-              </SignedOut>
-            </ThemeProvider>
+                  <CustomToast visible={toastVisible} message="İşlem başarılı!" />
+                </SignedIn>
+                <SignedOut>
+                  <LoginScreen />
+                </SignedOut>
+              </ThemeProvider>
+            </RecentlyViewedBooksProvider>
           </SearchResultsProvider>
         </FavoritesProvider>
       </HomeDataProvider>

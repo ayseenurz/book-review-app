@@ -1,3 +1,4 @@
+import { fetchAuthorImage } from '@/services/fetchAuthorImage'; // dosya yolunu kendi yapına göre ayarla
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useEffect, useRef, useState } from 'react';
 import { Animated, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
@@ -15,6 +16,7 @@ const Detail = () => {
   const authorid = typeof params.authorid === 'string' ? params.authorid : '';
   const [authorInfo, setAuthorInfo] = useState<any>(null);
   const [authorLoading, setAuthorLoading] = useState(true);
+  const [authorImage, setAuthorImage] = useState<string | null | undefined>(undefined);
 
   const scrollY = useRef(new Animated.Value(0)).current;
 
@@ -40,9 +42,35 @@ const Detail = () => {
       .finally(() => setTimeout(() => setAuthorLoading(false), 1000));
   }, [authorid]);
 
+  useEffect(() => {
+    if (authorid) {
+      console.log('Yazar ID param:', authorid);
+    }
+  }, [authorid]);
+
+  useEffect(() => {
+    if (authorInfo && authorInfo.key) {
+      console.log('OpenLibrary Yazar ID:', authorInfo.key);
+    }
+  }, [authorInfo]);
+
+  useEffect(() => {
+    const getAuthorImage = async () => {
+      if (authorInfo && authorInfo.key) {
+        // key: '/authors/OL12345A' → id: 'OL12345A'
+        const id = authorInfo.key.replace('/authors/', '');
+        const image = await fetchAuthorImage(id);
+        setAuthorImage(image);
+      }
+    };
+    getAuthorImage();
+  }, [authorInfo]);
+
   return (
     <View style={styles.container}>
-      <Header animatedHeight={animatedHeight} />
+      {authorImage !== undefined && (
+        <Header animatedHeight={animatedHeight} imageUrl={authorImage} />
+      )}
       <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
         <Image
           source={require('../../assets/icons/back.png')}
@@ -79,6 +107,7 @@ export default Detail;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#FFFBF9', 
   },
   backButton: {
     position: 'absolute',
@@ -89,23 +118,32 @@ const styles = StyleSheet.create({
     padding: 6,
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  backIcon: {
-    width: 28,
-    height: 28,
-    tintColor: '#6c584c',
-  },
-  authorBox: {
-    alignItems: 'center',
-    borderRadius: 16,
+    backgroundColor: '#f2eee9',
     shadowColor: '#000',
     shadowOpacity: 0.06,
     shadowRadius: 4,
-    elevation: 1,
+    elevation: 2,
   },
+  backIcon: {
+    width: 26,
+    height: 26,
+    tintColor: '#6B4F27',
+  },
+  authorBox: {
+    width: '100%',
+    paddingBottom: 12,
+    marginBottom: 16,
+  },  
   empty: {
     color: '#888',
     textAlign: 'center',
     marginTop: 32,
+  },
+  authorImage: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    marginBottom: 10,
+    alignSelf: 'center',
   },
 });

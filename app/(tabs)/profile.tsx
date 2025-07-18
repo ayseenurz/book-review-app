@@ -1,5 +1,9 @@
+import { useFavorites } from '@/components/FavoritesContext';
+import { db } from '@/configs/FirebaseConfig';
 import { Colors } from '@/constants/Colors';
 import { useAuth, useUser } from '@clerk/clerk-expo';
+import { useRouter } from 'expo-router';
+import { collection, getDocs, query, where } from 'firebase/firestore';
 import React from 'react';
 import { Alert, Image, SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
@@ -7,6 +11,19 @@ import { Alert, Image, SafeAreaView, StyleSheet, Text, TouchableOpacity, View } 
 const Profile = () => {
   const {user} = useUser();
   const {signOut} = useAuth();
+  const { favorites } = useFavorites();
+  const [commentCount, setCommentCount] = React.useState<number>(0);
+  const router = useRouter();
+
+  React.useEffect(() => {
+    const fetchCommentCount = async () => {
+      if (!user?.id) return;
+      const q = query(collection(db, 'comments'), where('userId', '==', user.id));
+      const snap = await getDocs(q);
+      setCommentCount(snap.size);
+    };
+    fetchCommentCount();
+  }, [user?.id]);
 
   const handleSignOut = () => {
     Alert.alert(
@@ -18,6 +35,13 @@ const Profile = () => {
       ]
     );
   };
+
+  // Üyelik tarihi (varsa)
+  let joinDate = '';
+  if (user?.createdAt) {
+    const date = new Date(user.createdAt);
+    joinDate = date.toLocaleDateString('tr-TR');
+  }
 
   return (
     <View style={{ flex: 1 }}>
@@ -32,17 +56,17 @@ const Profile = () => {
         </View>
         <View style={styles.statsContainer}>
           <View style={styles.statBox}>
-            <Text style={styles.statNumber}>{12}</Text>
-            <Text style={styles.statLabel}>Kitap</Text>
+            <Text style={styles.statNumber}>{joinDate || '-'}</Text>
+            <Text style={styles.statLabel}>Üyelik Tarihi</Text>
           </View>
-          <View style={styles.statBox}>
-            <Text style={styles.statNumber}>{5}</Text>
+          <TouchableOpacity style={styles.statBox} onPress={() => router.push('/bookmark')}>
+            <Text style={styles.statNumber}>{Object.keys(favorites).length}</Text>
             <Text style={styles.statLabel}>Favoriler</Text>
-          </View>
-          <View style={styles.statBox}>
-            <Text style={styles.statNumber}>{8}</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.statBox} onPress={() => router.push('/Comments/CommentList')}>
+            <Text style={styles.statNumber}>{commentCount}</Text>
             <Text style={styles.statLabel}>Yorum</Text>
-          </View>
+          </TouchableOpacity>
         </View>
       </SafeAreaView>
       <View style={styles.footerTag}>

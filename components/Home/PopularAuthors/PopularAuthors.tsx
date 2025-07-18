@@ -37,9 +37,9 @@ const PopularAuthors: React.FC<PopularAuthorsProps> = ({ onLoaded }) => {
   const colors = ["#a3917b", "#6c584c", "#c2b6a3", "#a89984", "#7a6f63"];
 
   return (
-    <View>
+    <View style={styles.container}>
       <Text style={styles.title}>Popüler Yazarlar</Text>
-      <View style={styles.container}>
+      <View style={styles.contentContainer}>
         <FlatList
           data={authors}
           keyExtractor={(item, index) => `${item}-${index}`}
@@ -60,8 +60,6 @@ const PopularAuthors: React.FC<PopularAuthorsProps> = ({ onLoaded }) => {
               </TouchableOpacity>
             </MotiView>
           )}
-          
-          contentContainerStyle={{ paddingBottom: 20 }}
         />
       </View>
     </View>
@@ -69,15 +67,19 @@ const PopularAuthors: React.FC<PopularAuthorsProps> = ({ onLoaded }) => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
+  container:{
+    flex:1,
+    marginTop:8
   },
   title: {
     alignContent: "flex-start",
     fontSize: 20,
     fontWeight: "700",
-    margin: 12,
+    margin: 14,
     color: Colors.light.koyuKahverengi,
+  },
+  contentContainer: {
+    flex: 1,
   },
 });
 

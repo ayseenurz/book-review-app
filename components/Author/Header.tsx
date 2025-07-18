@@ -6,11 +6,16 @@ const { width } = Dimensions.get("window");
 
 type Props = {
   animatedHeight: any;
+  imageUrl?: string | null;
 };
 
-const Header = ({ animatedHeight }: Props) => (
+const Header = ({ animatedHeight, imageUrl }: Props) => (
   <Animated.Image
-    source={require("../../assets/author-placeholder.png")}
+    source={
+      imageUrl
+        ? { uri: imageUrl }
+        : require("../../assets/icons/author-placeholder.png")
+    }
     style={[
       styles.authorImage,
       { height: animatedHeight, width }

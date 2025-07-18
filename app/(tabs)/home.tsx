@@ -1,13 +1,21 @@
-import BookOfThisMonth from "@/components/BookOfMonth/BookOfThisMonth";
+import BookOfThisMonth from "@/components/Home/BookOfMonth/BookOfThisMonth";
 import Categories from "@/components/Explore/Categories";
 import { useFavorites } from "@/components/FavoritesContext";
-import Header from "@/components/Header/Header";
+import Header from "@/components/Home/HomeHeader";
 import LoadingScreen from "@/components/LoadingScreen";
-import PopularAuthors from "@/components/PopularAuthors/PopularAuthors";
-import SuggestedBooks from "@/components/SuggestedBooks/SuggestedBooks";
-import { useFocusEffect } from 'expo-router';
+import PopularAuthors from "@/components/Home/PopularAuthors/PopularAuthors";
+import RecentlyViewedBooks from "@/components/Home/RecentlyViewed/RecentlyViewedBooks";
+import SuggestedBooks from "@/components/Home/SuggestedBooks/SuggestedBooks";
+import { useFocusEffect } from "expo-router";
 import React, { useCallback, useEffect, useState } from "react";
-import { RefreshControl, SafeAreaView, ScrollView, StyleSheet } from "react-native";
+import {
+  Platform,
+  RefreshControl,
+  ScrollView,
+  StatusBar,
+  StyleSheet,
+  View,
+} from "react-native";
 
 const Home = () => {
   const { favorites } = useFavorites();
@@ -18,10 +26,11 @@ const Home = () => {
 
   const allLoaded = !loadingBooks && !loadingSuggested && !loadingAuthors;
 
-  useFocusEffect(
-    useCallback(() => {
-    }, [])
-  );
+  // Safe area için dinamik padding
+  const safeTop = Platform.OS === "ios" ? 44 : StatusBar.currentHeight || 24;
+  const safeBottom = Platform.OS === "ios" ? 24 : 16;
+
+  useFocusEffect(useCallback(() => {}, []));
 
   useEffect(() => {
     fetchData();
@@ -48,10 +57,16 @@ const Home = () => {
   }
 
   return (
-    <SafeAreaView style={styles.safeArea}>
+    <View
+      style={[
+        styles.safeArea,
+        { paddingTop: safeTop, paddingBottom: safeBottom },
+      ]}
+    >
       <Header />
       <ScrollView
         style={styles.scrollView}
+        showsVerticalScrollIndicator={false}
         refreshControl={
           <RefreshControl
             refreshing={refreshing}
@@ -65,15 +80,16 @@ const Home = () => {
         <BookOfThisMonth onLoaded={() => setLoadingBooks(false)} />
         <PopularAuthors onLoaded={() => setLoadingAuthors(false)} />
         <SuggestedBooks onLoaded={() => setLoadingSuggested(false)} />
+        <RecentlyViewedBooks />
+        <View style={{ height: 60 }}></View>
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    padding: 10,
     backgroundColor: "#FFFBF9",
   },
   scrollView: {

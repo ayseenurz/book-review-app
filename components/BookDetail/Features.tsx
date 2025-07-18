@@ -1,37 +1,38 @@
 import { Colors } from '@/constants/Colors';
-import { useUser } from '@clerk/clerk-expo';
 import React from 'react';
 import { Image, StyleSheet, Text, View } from 'react-native';
 import { useFavorites } from "@/components/FavoritesContext";
 
 interface FeaturesProps {
-  volume: any; 
+  volume: any;
 }
 
 const Features: React.FC<FeaturesProps> = ({ volume }) => {
-  const { isLoaded, isSignedIn, user } = useUser();
   const { favoritesCounts } = useFavorites();
 
   if (!volume) return null;
 
-  
   const favoriteCount = favoritesCounts[volume.id] || 0;
 
   return (
     <View style={styles.container}>
-      <View style={styles.iconWrapper}>
+      <View style={styles.item}>
         <Image source={require("@/assets/icons/calendar.png")} style={styles.icon} resizeMode="contain" />
-        <Text style={styles.iconText}>{volume.publishedDate}</Text>
+        <Text style={styles.text}>{volume.publishedDate}</Text>
       </View>
-      <View style={styles.iconWrapper}>
-        <Text style={styles.iconSeparator}>|</Text>
+
+      <View style={styles.separator} />
+
+      <View style={styles.item}>
         <Image source={require("@/assets/icons/unchecked-bookmark.png")} style={styles.icon} resizeMode="contain" />
-        <Text style={styles.iconText}>{favoriteCount}</Text>
+        <Text style={styles.text}>{favoriteCount}</Text>
       </View>
-      <View style={styles.iconWrapper}>
-        <Text style={styles.iconSeparator}>|</Text>
+
+      <View style={styles.separator} />
+
+      <View style={styles.item}>
         <Image source={require("@/assets/icons/world.png")} style={styles.icon} resizeMode="contain" />
-        <Text style={styles.iconText}>{volume.language?.toUpperCase()}</Text>
+        <Text style={styles.text}>{volume.language?.toUpperCase()}</Text>
       </View>
     </View>
   );
@@ -41,36 +42,41 @@ export default Features;
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: Colors.light.acikKrem,
     flexDirection: "row",
-    justifyContent: "space-around",
-    borderRadius: 10,
-    borderWidth: 1.5,
-    borderColor: Colors.light.koyuKahverengi,
-    padding: 10,
-    marginHorizontal: 10,
+    alignItems: "center",
+    justifyContent: "space-evenly",
+    backgroundColor: "#FFFBF9",
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: "#E0D8CF",
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    marginHorizontal: 16,
     shadowColor: '#000',
-    shadowOpacity: 0.06,
-    shadowRadius: 4,
+    shadowOpacity: 0.04,
+    shadowRadius: 2,
     elevation: 1,
   },
-  iconWrapper: {
+  item: {
     flexDirection: "row",
-    justifyContent: "center",
     alignItems: "center",
-    gap: 20,
-  },
-  iconText: {
-    fontSize: 16,
-    color: '#333',
-    marginBottom: 6,
   },
   icon: {
-    width: 20,
-    height: 20,
+    width: 16,
+    height: 16,
+    marginRight: 4,
+    tintColor: "#6B4F27", // daha soft kahverengi tonu
   },
-  iconSeparator: {
-    fontSize: 24,
-    color: Colors.light.koyuKahverengi,
+  text: {
+    fontSize: 13,
+    color: "#4B3832",
+  },
+  separator: {
+    width: 1,
+    height: 20,
+    backgroundColor: "#C8B7A6",
+    marginHorizontal: 6,
+    opacity: 0.5,
+    borderRadius: 1,
   },
 });

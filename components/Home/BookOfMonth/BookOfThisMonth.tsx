@@ -90,12 +90,11 @@ const BookOfThisMonth: React.FC<BookOfThisMonthProps> = ({ onLoaded }) => {
     }, 500);
   };
 
-  
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>
-        {isFallback ? "Son Yayınlanan Kitaplar" : "Bu Ayın Kitapları"}
-      </Text>
+      {isFallback && (
+        <Text style={styles.title}>Son Yayınlanan Kitaplar</Text>
+      )}
       <FlatList
         data={displayedBooks}
         keyExtractor={(item) => item.id}
@@ -134,14 +133,15 @@ const BookOfThisMonth: React.FC<BookOfThisMonthProps> = ({ onLoaded }) => {
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 10,
+    flex:1,
+    marginTop: 20,
   },
   title: {
     paddingHorizontal: 16,
     color: Colors.light.koyuKahverengi,
     fontSize: 20,
     fontWeight: "bold",
-    marginBottom: 12,
+    marginBottom: 16,
   },
 });
 

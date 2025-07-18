@@ -1,5 +1,6 @@
 import { Colors } from "@/constants/Colors";
 import { useFocusEffect, useRouter } from "expo-router";
+import { MotiView } from "moti";
 import React, { useEffect, useRef, useState } from "react";
 import {
   FlatList,
@@ -13,11 +14,9 @@ import {
   TouchableWithoutFeedback,
   View,
 } from "react-native";
-import CategoryListCard from "../../components/Explore/CategoryCard";
+import CategoryCard from "../../components/Explore/CategoryCard";
 import { useSearchResults } from "../../components/SearchResultsContext";
 import BookListCard from "../BookList/BookListCard";
-import CategoryCard from "../../components/Explore/CategoryCard";
-import { MotiView } from "moti";
 
 const Explore = () => {
   const router = useRouter();
@@ -191,6 +190,7 @@ const Explore = () => {
             <FlatList
               data={results}
               keyExtractor={(item) => item.id}
+              numColumns={1}
               renderItem={({ item, index }) => (
                 <MotiView
                   from={{ opacity: 0, translateY: 40 }}
@@ -202,9 +202,10 @@ const Explore = () => {
                   }}
                   style={{ marginVertical: 8 }}
                 >
-                  <BookListCard book={item} />
+                  <BookListCard book={item} fullWidth horizontal />
                 </MotiView>
               )}
+              contentContainerStyle={{ paddingHorizontal: 12 }}
               ListFooterComponent={
                 loading ? (
                   <Text style={styles.loadingText}>Yükleniyor...</Text>
