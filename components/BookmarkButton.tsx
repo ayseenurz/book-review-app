@@ -129,11 +129,6 @@ const BookmarkButton: React.FC<BookmarkButtonProps> = ({ type, item }) => {
           Alert.alert("Hata", "Firestore bağlantısı yok.");
           return;
         }
-        console.log(
-          "Firestore path:",
-          `Favorites/${user.id}/authors/${author.id}`
-        );
-        console.log("author ekleniyor:", safeAuthor);
         await setDoc(
           doc(db, "Favorites", user.id, "authors", author.id),
           safeAuthor

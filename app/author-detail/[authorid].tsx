@@ -60,17 +60,6 @@ const Detail = () => {
       .finally(() => setTimeout(() => setAuthorLoading(false), 1000));
   }, [authorid]);
 
-  useEffect(() => {
-    if (authorid) {
-      console.log("Yazar ID param:", authorid);
-    }
-  }, [authorid]);
-
-  useEffect(() => {
-    if (authorInfo && authorInfo.key) {
-      console.log("OpenLibrary Yazar ID:", authorInfo.key);
-    }
-  }, [authorInfo]);
 
   useEffect(() => {
     const getAuthorImage = async () => {
