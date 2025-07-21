@@ -1,45 +1,76 @@
-import { Tabs } from 'expo-router';
-import React from 'react';
-import { Platform } from 'react-native';
+import { IconSymbol } from "@/components/ui/IconSymbol.ios";
+import { Colors } from "@/constants/Colors";
+import { Tabs } from "expo-router";
+import React from "react";
+import { StyleSheet } from "react-native";
 
-import { HapticTab } from '@/components/HapticTab';
-import { IconSymbol } from '@/components/ui/IconSymbol';
-import TabBarBackground from '@/components/ui/TabBarBackground';
-import { Colors } from '@/constants/Colors';
-import { useColorScheme } from '@/hooks/useColorScheme';
 
-export default function TabLayout() {
-  const colorScheme = useColorScheme();
-
+const TabLayout = () => {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
         headerShown: false,
-        tabBarButton: HapticTab,
-        tabBarBackground: TabBarBackground,
-        tabBarStyle: Platform.select({
-          ios: {
-            // Use a transparent background on iOS to show the blur effect
-            position: 'absolute',
-          },
-          default: {},
-        }),
-      }}>
+        tabBarActiveTintColor: Colors.light.koyuKahverengi,
+        tabBarInactiveTintColor: Colors.light.kahverengi,
+        tabBarLabelStyle: {
+          fontSize: 12,
+          fontWeight: "bold",
+        },
+        tabBarStyle: {
+          backgroundColor: "#FFFBFA",
+          borderTopWidth: 2,
+          position: "absolute",
+          bottom: 0,
+          left: 0,
+          right: 0,
+          borderTopColor: "#501a03",
+          paddingBottom: 10,
+          paddingTop: 10,
+          paddingHorizontal: 20,
+          height: "10%",
+        },
+      }}
+    >
       <Tabs.Screen
-        name="index"
+        name="home"
         options={{
-          title: 'Home',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
+          title: "Anasayfa",
+          tabBarIcon: ({ focused }: { focused: boolean }) => (
+            <IconSymbol name="house.fill" color={focused ? Colors.light.koyuKahverengi : Colors.light.kahverengi} />
+          ),
         }}
       />
       <Tabs.Screen
         name="explore"
         options={{
-          title: 'Explore',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
+          title: "Keşfet",
+          tabBarIcon: ({ focused }: { focused: boolean }) => (
+            <IconSymbol name="magnifyingglass" color={focused ? Colors.light.koyuKahverengi : Colors.light.kahverengi} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="bookmark"
+        options={{
+          title: "Favoriler",
+          tabBarIcon: ({ focused }: { focused: boolean }) => (
+            <IconSymbol name="bookmark.fill" color={focused ? Colors.light.koyuKahverengi : Colors.light.kahverengi} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="profile"
+        options={{
+          title: "Profil",
+          tabBarIcon: ({ focused }: { focused: boolean }) => (
+            <IconSymbol name="person.fill" color={focused ? Colors.light.koyuKahverengi : Colors.light.kahverengi} />
+          ),
         }}
       />
     </Tabs>
   );
-}
+};
+
+export default TabLayout;
+
+const styles = StyleSheet.create({});

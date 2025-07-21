@@ -1,110 +1,307 @@
-import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
+import { Colors } from "@/constants/Colors";
+import { useFocusEffect, useRouter } from "expo-router";
+import { MotiView } from "moti";
+import React, { useEffect, useRef, useState } from "react";
+import {
+  FlatList,
+  Image,
+  Keyboard,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  View,
+} from "react-native";
+import CategoryCard from "../../components/Explore/CategoryCard";
+import { useSearchResults } from "../../components/SearchResultsContext";
+import BookListCard from "../BookList/BookListCard";
 
-import { Collapsible } from '@/components/Collapsible';
-import { ExternalLink } from '@/components/ExternalLink';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
-import { IconSymbol } from '@/components/ui/IconSymbol';
+const Explore = () => {
+  const router = useRouter();
+  const { results, setResults } = useSearchResults();
+  const [search, setSearch] = useState("");
+  const [inputValue, setInputValue] = useState("");
+  const [loading, setLoading] = useState(false);
+  const abortRef = useRef<AbortController | null>(null);
 
-export default function TabTwoScreen() {
-  return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#D0D0D0', dark: '#353636' }}
-      headerImage={
-        <IconSymbol
-          size={310}
-          color="#808080"
-          name="chevron.left.forwardslash.chevron.right"
-          style={styles.headerImage}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Explore</ThemedText>
-      </ThemedView>
-      <ThemedText>This app includes example code to help you get started.</ThemedText>
-      <Collapsible title="File-based routing">
-        <ThemedText>
-          This app has two screens:{' '}
-          <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> and{' '}
-          <ThemedText type="defaultSemiBold">app/(tabs)/explore.tsx</ThemedText>
-        </ThemedText>
-        <ThemedText>
-          The layout file in <ThemedText type="defaultSemiBold">app/(tabs)/_layout.tsx</ThemedText>{' '}
-          sets up the tab navigator.
-        </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/router/introduction">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Android, iOS, and web support">
-        <ThemedText>
-          You can open this project on Android, iOS, and the web. To open the web version, press{' '}
-          <ThemedText type="defaultSemiBold">w</ThemedText> in the terminal running this project.
-        </ThemedText>
-      </Collapsible>
-      <Collapsible title="Images">
-        <ThemedText>
-          For static images, you can use the <ThemedText type="defaultSemiBold">@2x</ThemedText> and{' '}
-          <ThemedText type="defaultSemiBold">@3x</ThemedText> suffixes to provide files for
-          different screen densities
-        </ThemedText>
-        <Image source={require('@/assets/images/react-logo.png')} style={{ alignSelf: 'center' }} />
-        <ExternalLink href="https://reactnative.dev/docs/images">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Custom fonts">
-        <ThemedText>
-          Open <ThemedText type="defaultSemiBold">app/_layout.tsx</ThemedText> to see how to load{' '}
-          <ThemedText style={{ fontFamily: 'SpaceMono' }}>
-            custom fonts such as this one.
-          </ThemedText>
-        </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/versions/latest/sdk/font">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Light and dark mode components">
-        <ThemedText>
-          This template has light and dark mode support. The{' '}
-          <ThemedText type="defaultSemiBold">useColorScheme()</ThemedText> hook lets you inspect
-          what the user&apos;s current color scheme is, and so you can adjust UI colors accordingly.
-        </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/develop/user-interface/color-themes/">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Animations">
-        <ThemedText>
-          This template includes an example of an animated component. The{' '}
-          <ThemedText type="defaultSemiBold">components/HelloWave.tsx</ThemedText> component uses
-          the powerful <ThemedText type="defaultSemiBold">react-native-reanimated</ThemedText>{' '}
-          library to create a waving hand animation.
-        </ThemedText>
-        {Platform.select({
-          ios: (
-            <ThemedText>
-              The <ThemedText type="defaultSemiBold">components/ParallaxScrollView.tsx</ThemedText>{' '}
-              component provides a parallax effect for the header image.
-            </ThemedText>
-          ),
-        })}
-      </Collapsible>
-    </ParallaxScrollView>
+  const genres = [
+    "Kişisel Gelişim",
+    "Bilim Kurgu",
+    "Fantastik",
+    "Sosyal Bilimler",
+    "Tarih",
+    "Biyografi",
+    "Din",
+    "Çocuk",
+    "Teknoloji ve Mühendislik",
+    "İş Dünyası ve Ekonomi",
+  ];
+
+  const genreColors = [
+    "#a3917b",
+    "#6c584c",
+    "#c2b6a3",
+    "#a89984",
+    "#7a6f63",
+    "#e0b084",
+    "#b7b7a4",
+    "#ffe5b4",
+    "#b5838d",
+    "#adc178",
+  ];
+  const genreImages: Record<string, any> = {
+    "Kişisel Gelişim": require("../../assets/icons/help.png"),
+    "Bilim Kurgu": require("../../assets/icons/scifi.png"),
+    Fantastik: require("../../assets/icons/fantasy.png"),
+    "Sosyal Bilimler": require("../../assets/icons/social-science.png"),
+    Tarih: require("../../assets/icons/history.png"),
+    Biyografi: require("../../assets/icons/biography.png"),
+    Din: require("../../assets/icons/religion.png"),
+    Çocuk: require("../../assets/icons/child.png"),
+    "Teknoloji ve Mühendislik": require("../../assets/icons/technology.png"),
+    "İş Dünyası ve Ekonomi": require("../../assets/icons/economic.png"),
+  };
+  // Her input değişiminde arama tetiklenir
+  useEffect(() => {
+    if (abortRef.current) {
+      abortRef.current.abort();
+    }
+    if (!inputValue.trim()) {
+      setResults([]);
+      setLoading(false);
+      return;
+    }
+    setLoading(true);
+    const controller = new AbortController();
+    abortRef.current = controller;
+    const fetchBooks = async () => {
+      try {
+        const res = await fetch(
+          `https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(
+            inputValue
+          )}`,
+          { signal: controller.signal }
+        );
+        const data = await res.json();
+        setResults(data.items || []);
+      } catch (e) {
+        if ((e as Error).name !== "AbortError") setResults([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchBooks();
+    return () => controller.abort();
+  }, [inputValue, setResults]);
+
+  const handleSearch = () => {
+    setInputValue(search);
+  };
+
+  useEffect(() => {
+    setInputValue(search);
+  }, [search]);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      return () => {
+        // Sadece arama kutusu boşsa 
+        if (!search.trim() && !inputValue.trim()) {
+          setResults([]);
+        }
+      };
+    }, [setResults, search, inputValue])
   );
-}
+
+  return (
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+      <SafeAreaView style={styles.container}>
+        <Text style={styles.header}>Kitapları Keşfet</Text>
+        <View style={styles.searchRow}>
+          <TextInput
+            value={search}
+            onChangeText={setSearch}
+            placeholder="Kitap veya yazar ara..."
+            style={styles.input}
+            returnKeyType="search"
+            onSubmitEditing={handleSearch}
+          />
+          <View style={styles.searchIconContainer}>
+            {search.trim() ? (
+              <TouchableOpacity
+                onPress={() => {
+                  setSearch("");
+                  setInputValue("");
+                }}
+              >
+                <Image
+                  source={require("../../assets/icons/close.png")}
+                  style={styles.searchIcon}
+                />
+              </TouchableOpacity>
+            ) : (
+              <TouchableOpacity onPress={handleSearch}>
+                <Image
+                  source={require("../../assets/icons/search.png")}
+                  style={styles.searchIcon}
+                />
+              </TouchableOpacity>
+            )}
+          </View>
+        </View>
+        {!search.trim() && !inputValue.trim() && (
+          <FlatList
+            data={genres}
+            keyExtractor={(item) => item}
+            numColumns={2}
+            contentContainerStyle={{ padding: 12 }}
+            renderItem={({ item, index }) => (
+              <CategoryCard
+                genre={item}
+                onPress={() => {
+                  setSearch(item);
+                  setInputValue(item);
+                }}
+                index={index}
+                image={genreImages[item]}
+                animationAxis="y"
+              />
+            )}
+          />
+        )}
+        {(search.trim() || inputValue.trim()) && (
+          <>
+            {results.length === 0 && !loading && (
+              <View style={styles.emptyState}>
+                <Image
+                  source={require("../../assets/icons/smartphone.png")}
+                  style={styles.emptyStateIcon}
+                />
+                <Text style={styles.emptyText}>
+                  Sonuç bulunamadı veya arama yapılmadı.
+                </Text>
+              </View>
+            )}
+            <FlatList
+              data={results}
+              keyExtractor={(item) => item.id}
+              numColumns={1}
+              renderItem={({ item, index }) => (
+                <MotiView
+                  from={{ opacity: 0, translateY: 40 }}
+                  animate={{ opacity: 1, translateY: 0 }}
+                  transition={{
+                    type: "timing",
+                    duration: 400,
+                    delay: index * 100,
+                  }}
+                  style={{ marginVertical: 8 }}
+                >
+                  <BookListCard book={item} fullWidth horizontal />
+                </MotiView>
+              )}
+              contentContainerStyle={{ paddingHorizontal: 12 }}
+              ListFooterComponent={
+                loading ? (
+                  <Text style={styles.loadingText}>Yükleniyor...</Text>
+                ) : null
+              }
+            />
+          </>
+        )}
+        <View style={styles.footer}>
+          <Text>...</Text>
+        </View>
+      </SafeAreaView>
+    </TouchableWithoutFeedback>
+  );
+};
 
 const styles = StyleSheet.create({
-  headerImage: {
-    color: '#808080',
-    bottom: -90,
-    left: -35,
-    position: 'absolute',
+  container: {
+    flex: 1,
+    padding: 10,
+    backgroundColor: "#FFFBF9",
   },
-  titleContainer: {
-    flexDirection: 'row',
-    gap: 8,
+  header: {
+    marginTop: 40,
+    fontSize: 24,
+    color: Colors.light.koyuKahverengi,
+    fontWeight: "bold",
+    margin: 24,
+  },
+  searchRow: {
+    flexDirection: "row",
+    backgroundColor: Colors.light.acikKrem,
+    marginHorizontal: 24,
+    marginVertical: 4,
+    borderRadius: 12,
+    padding: 8,
+  },
+  input: {
+    flex: 1,
+    borderRadius: 8,
+    borderWidth: 0,
+    borderColor: Colors.light.acikKahverengi,
+    padding: 8,
+    marginRight: 8,
+  },
+  searchButton: {
+    backgroundColor: "#501a03",
+    borderRadius: 8,
+    paddingHorizontal: 16,
+    justifyContent: "center",
+    alignItems: "center",
+    height: 40,
+  },
+  searchButtonText: {
+    color: "#fff",
+    fontWeight: "bold",
+  },
+  emptyState: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+  },
+  emptyStateIcon: {
+    width: 48,
+    height: 48,
+    opacity: 0.3,
+    tintColor: "#000",
+    marginBottom: 12,
+  },
+  emptyText: {
+    fontSize: 17,
+    color: "#888",
+    textAlign: "center",
+    maxWidth: 260,
+  },
+  loadingText: {
+    textAlign: "center",
+    marginTop: 16,
+  },
+  searchIconContainer: {
+    position: "absolute",
+    right: 16,
+    top: 0,
+    bottom: 0,
+    justifyContent: "center",
+  },
+  searchIcon: {
+    width: 24,
+    height: 24,
+    opacity: 0.3,
+  },
+  footer: {
+    marginTop: 16,
   },
 });
+
+export default Explore;
