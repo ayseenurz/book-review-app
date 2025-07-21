@@ -3,7 +3,7 @@ import LoadingScreen from "@/components/LoadingScreen";
 import { db } from "@/configs/FirebaseConfig";
 import { Colors } from "@/constants/Colors";
 import { useUser } from "@clerk/clerk-expo";
-import { Feather } from '@expo/vector-icons';
+import { Feather } from "@expo/vector-icons";
 import { useFocusEffect } from "expo-router";
 import { collection, deleteDoc, doc, getDocs } from "firebase/firestore";
 import { MotiView } from "moti";
@@ -106,7 +106,8 @@ const FavoriteBooks = () => {
       <Text style={styles.title}>Favori Kitaplarım</Text>
       {bookDetails.length > 0 && (
         <Text style={styles.count}>
-          Toplamda <Text style={styles.countNumber}>{bookDetails.length}</Text> kitap favorilenmiş.
+          Toplamda <Text style={styles.countNumber}>{bookDetails.length}</Text>{" "}
+          kitap favorilenmiş.
         </Text>
       )}
       {!isLoaded || !isSignedIn ? (
@@ -185,16 +186,16 @@ const styles = StyleSheet.create({
   },
   emptyContainer: {
     flex: 1,
-    justifyContent: 'flex-start',
-    alignItems: 'center',
+    justifyContent: "flex-start",
+    alignItems: "center",
     minHeight: 200,
     marginTop: 200,
   },
   emptyText: {
-    color: '#7a6b5b',
+    color: "#7a6b5b",
     fontSize: 16,
     marginTop: 12,
-    textAlign: 'center',
+    textAlign: "center",
   },
   cardWrapper: {
     marginVertical: 8,

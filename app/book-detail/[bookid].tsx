@@ -1,14 +1,18 @@
-// pages/BookDetail.tsx
 import BookInfo from "@/components/BookDetail/BookInfo";
 import Comments from "@/components/BookDetail/Comments";
 import Description from "@/components/BookDetail/Description";
 import Features from "@/components/BookDetail/Features";
 import BookmarkButton from "@/components/BookmarkButton";
 import LoadingScreen from "@/components/LoadingScreen";
+import ReadingListButton from "@/components/ReadingList/ReadingListButton";
 import { useRecentlyViewedBooks } from "@/components/RecentlyViewedBooksContext";
+import { db } from "@/configs/FirebaseConfig";
 import { Colors } from "@/constants/Colors";
 import { useUser } from "@clerk/clerk-expo";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router, useLocalSearchParams } from "expo-router";
+import { doc, onSnapshot } from "firebase/firestore";
+import { MotiView } from "moti";
 import React, { useEffect, useState } from "react";
 import {
   FlatList,
@@ -39,8 +43,9 @@ const BookDetail = () => {
   const { isLoaded, isSignedIn, user } = useUser();
   const [comments, setComments] = useState<any[]>([]);
   const [commentsLoading, setCommentsLoading] = useState(true);
+  const [inReadingList, setInReadingList] = useState(false);
+  const [favoriteCount, setFavoriteCount] = useState<number>(0);
 
-  // Yorum ekleme formu için state
   const [newComment, setNewComment] = useState("");
   const [newRating, setNewRating] = useState(0);
   const [sending, setSending] = useState(false);
@@ -105,102 +110,110 @@ const BookDetail = () => {
 
   useEffect(() => {
     addRecentlyViewed(bookid);
+    const checkInList = async () => {
+      const json = await AsyncStorage.getItem("READING_LIST");
+      let list = json ? JSON.parse(json) : [];
+      setInReadingList(list.some((b: any) => b.id === bookid));
+    };
+    checkInList();
+  }, [bookid]);
+
+  useEffect(() => {
+    if (!bookid) return;
+    const countRef = doc(db, "BookFavoritesCount", bookid);
+    const unsubscribe = onSnapshot(countRef, (docSnap) => {
+      if (docSnap.exists()) {
+        setFavoriteCount(docSnap.data().count || 0);
+      } else {
+        setFavoriteCount(0);
+      }
+    });
+    return () => unsubscribe();
   }, [bookid]);
 
   if (!isLoaded) return <LoadingScreen />;
   if (!isSignedIn)
-    return (
-      <Text style={{ color: "red", marginTop: 32 }}>Giriş yapmalısınız.</Text>
-    );
+    return <Text style={styles.errorText}>Giriş yapmalısınız.</Text>;
   if (loading) return <LoadingScreen />;
   if (error || !book)
-    return (
-      <Text style={{ color: "red", marginTop: 32 }}>
-        {error || "Kitap bulunamadı."}
-      </Text>
-    );
+    return <Text style={styles.errorText}>{error || "Kitap bulunamadı."}</Text>;
 
   const volume = book?.volumeInfo;
   if (!volume)
-    return (
-      <Text style={{ color: "red", marginTop: 32 }}>
-        Kitap bilgisi bulunamadı.
-      </Text>
-    );
+    return <Text style={styles.errorText}>Kitap bilgisi bulunamadı.</Text>;
 
   return (
     <KeyboardAvoidingView
-      style={{ flex: 1 }}
+      style={styles.flex1}
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       keyboardVerticalOffset={HEADER_HEIGHT}
     >
       <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
         <View style={styles.container}>
-          <View style={styles.header}>
-            <TouchableOpacity onPress={() => router.back()}>
-              <Image
-                source={require("@/assets/icons/back.png")}
-                style={styles.backButton}
-                resizeMode="contain"
-              />
-            </TouchableOpacity>
-            <Text style={styles.details}>Kitap Detayları</Text>
-            <BookmarkButton
-              type="book"
-              item={{
-                id: bookid,
-                title: volume.title,
-                author: volume.authors?.join(", ") || "Bilinmeyen yazar",
-                coverUrl: volume.imageLinks?.thumbnail,
-                publishedDate: volume.publishedDate,
-              }}
-            />
-          </View>
-          <FlatList
-            data={comments}
-            keyExtractor={(item) => item.id}
-            ListHeaderComponent={
-              <>
-                {/* Kitap görseli ortada, adı ve yazar altında */}
-                <BookInfo volume={volume} router={router} />
-                <Features volume={volume} />
-                <Description description={volume.description} />
-                {isSignedIn && <Comments bookId={bookid} />}
-              </>
-            }
-            renderItem={({ item }) => (
-              <View
-                style={{
-                  marginHorizontal: 16,
-                  marginBottom: 12,
-                  backgroundColor: "#fff",
-                  borderRadius: 8,
-                  padding: 12,
-                }}
-              >
-                <Text
-                  style={{
-                    fontWeight: "bold",
-                    color: "#6c584c",
-                    marginBottom: 2,
-                  }}
-                >
-                  {item.userName}
-                </Text>
-                <Text style={{ color: "#888", fontSize: 12, marginBottom: 4 }}>
-                  {item.createdAt}
-                </Text>
-                <Text style={{ fontSize: 15 }}>{item.comment}</Text>
-                {item.rating && (
-                  <Text style={{ color: "#a3917b", fontSize: 14 }}>
-                    Puan: {item.rating}
-                  </Text>
-                )}
+          <MotiView
+            from={{ opacity: 0, translateY: 20 }}
+            animate={{ opacity: 1, translateY: 0 }}
+            transition={{ type: "timing", duration: 500 }}
+          >
+            <View style={styles.header}>
+              <TouchableOpacity onPress={() => router.back()}>
+                <Image
+                  source={require("@/assets/icons/back.png")}
+                  style={styles.backButton}
+                  resizeMode="contain"
+                />
+              </TouchableOpacity>
+              <View style={styles.headerTitleContainer}>
+                <Text style={styles.details}>Kitap Detayları</Text>
               </View>
-            )}
-            contentContainerStyle={{ paddingBottom: 32 }}
-            showsVerticalScrollIndicator={false}
-          />
+              <View style={styles.headerRight}>
+                <ReadingListButton
+                  id={bookid}
+                  title={volume.title}
+                  authors={volume.authors}
+                  thumbnail={volume.imageLinks?.thumbnail}
+                  publishedDate={volume.publishedDate}
+                />
+                <BookmarkButton
+                  type="book"
+                  item={{
+                    id: bookid,
+                    title: volume.title,
+                    author: volume.authors?.join(", ") || "Bilinmeyen yazar",
+                    coverUrl: volume.imageLinks?.thumbnail,
+                    publishedDate: volume.publishedDate,
+                  }}
+                />
+              </View>
+            </View>
+
+            <FlatList
+              data={comments}
+              keyExtractor={(item) => item.id}
+              ListHeaderComponent={
+                <>
+                  <BookInfo book={book} router={router} />
+                  <Features book={book} favoriteCount={favoriteCount} />
+                  <Description book={book} />
+                  {isSignedIn && <Comments bookId={bookid} />}
+                </>
+              }
+              renderItem={({ item }) => (
+                <View style={styles.commentContainer}>
+                  <Text style={styles.commentUserName}>{item.userName}</Text>
+                  <Text style={styles.commentDate}>{item.createdAt}</Text>
+                  <Text style={styles.commentText}>{item.comment}</Text>
+                  {item.rating && (
+                    <Text style={styles.commentRating}>
+                      Puan: {item.rating}
+                    </Text>
+                  )}
+                </View>
+              )}
+              contentContainerStyle={styles.flatListContent}
+              showsVerticalScrollIndicator={false}
+            />
+          </MotiView>
         </View>
       </TouchableWithoutFeedback>
     </KeyboardAvoidingView>
@@ -208,6 +221,9 @@ const BookDetail = () => {
 };
 
 const styles = StyleSheet.create({
+  flex1: {
+    flex: 1,
+  },
   container: {
     flex: 1,
     backgroundColor: "#FFFBF9",
@@ -228,7 +244,20 @@ const styles = StyleSheet.create({
   details: {
     fontSize: 16,
     fontWeight: "bold",
+    marginLeft: 30,
     color: Colors.light.koyuKahverengi,
+    flex: 1,
+    textAlign: "center",
+  },
+  headerTitleContainer: {
+    flex: 1,
+    alignItems: "center",
+    flexDirection: "row",
+    justifyContent: "center",
+  },
+  headerRight: {
+    flexDirection: "row",
+    alignItems: "center",
   },
   bookInfoContainer: {
     alignItems: "center",
@@ -259,6 +288,60 @@ const styles = StyleSheet.create({
     color: "#a3917b",
     textAlign: "center",
     marginBottom: 8,
+  },
+  readingListBadge: {
+    backgroundColor: "#f2eee9",
+    borderRadius: 8,
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    marginLeft: 8,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  readingListBadgeText: {
+    color: "#6B4F27",
+    fontSize: 12,
+    fontWeight: "bold",
+  },
+  readingListAddButton: {
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    backgroundColor: "#f2eee9",
+    alignItems: "center",
+    justifyContent: "center",
+    marginRight: 8,
+  },
+  errorText: {
+    color: "red",
+    marginTop: 32,
+  },
+  commentContainer: {
+    marginHorizontal: 16,
+    marginBottom: 12,
+    backgroundColor: "#fff",
+    borderRadius: 8,
+    padding: 12,
+  },
+  commentUserName: {
+    fontWeight: "bold",
+    color: "#6c584c",
+    marginBottom: 2,
+  },
+  commentDate: {
+    color: "#888",
+    fontSize: 12,
+    marginBottom: 4,
+  },
+  commentText: {
+    fontSize: 15,
+  },
+  commentRating: {
+    color: "#a3917b",
+    fontSize: 14,
+  },
+  flatListContent: {
+    paddingBottom: 32,
   },
 });
 

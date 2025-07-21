@@ -1,5 +1,5 @@
-import React from 'react';
-import { Image, StyleSheet, Text, View } from 'react-native';
+import React from "react";
+import { Image, StyleSheet, Text, View } from "react-native";
 
 type CategoriesListCardProps = {
   title: string;
@@ -7,17 +7,23 @@ type CategoriesListCardProps = {
   thumbnail?: string;
 };
 
-const CategoriesListCard: React.FC<CategoriesListCardProps> = ({ title, authors, thumbnail }) => {
+const CategoriesListCard: React.FC<CategoriesListCardProps> = ({
+  title,
+  authors,
+  thumbnail,
+}) => {
   return (
     <View style={styles.card}>
       {thumbnail && (
         <Image source={{ uri: thumbnail }} style={styles.thumbnail} />
       )}
       <View style={{ flex: 1 }}>
-        <Text style={styles.title} numberOfLines={2}>{title}</Text>
+        <Text style={styles.title} numberOfLines={2}>
+          {title}
+        </Text>
         {authors && (
           <Text style={styles.authors} numberOfLines={1}>
-            {authors.join(', ')}
+            {authors.join(", ")}
           </Text>
         )}
       </View>
@@ -29,15 +35,15 @@ export default CategoriesListCard;
 
 const styles = StyleSheet.create({
   card: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     padding: 16,
     marginVertical: 6,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
     borderRadius: 8,
     elevation: 2,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOpacity: 0.1,
     shadowRadius: 4,
     shadowOffset: { width: 0, height: 2 },
@@ -47,15 +53,15 @@ const styles = StyleSheet.create({
     height: 75,
     borderRadius: 4,
     marginRight: 12,
-    backgroundColor: '#eee',
+    backgroundColor: "#eee",
   },
   title: {
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 4,
   },
   authors: {
     fontSize: 14,
-    color: '#666',
+    color: "#666",
   },
 });

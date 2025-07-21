@@ -1,14 +1,16 @@
 import { Colors } from "@/constants/Colors";
+import { useRouter } from "expo-router";
+import { MotiView } from "moti";
 import React, { useEffect, useState } from "react";
 import {
   ActivityIndicator,
   FlatList,
   StyleSheet,
   Text,
+  TouchableOpacity,
   View,
 } from "react-native";
 import BookOfThisMonthCard from "./BookOfThisMonthCard";
-import { MotiView } from "moti";
 
 interface Book {
   id: string;
@@ -23,66 +25,46 @@ interface Book {
 }
 
 interface BookOfThisMonthProps {
-  onLoaded?: () => void;
+  books: Book[];
 }
 
 const PAGE_SIZE = 5;
 
-const BookOfThisMonth: React.FC<BookOfThisMonthProps> = ({ onLoaded }) => {
-  const [allBooks, setAllBooks] = useState<Book[]>([]);
+const BookOfThisMonth: React.FC<BookOfThisMonthProps> = ({ books }) => {
   const [displayedBooks, setDisplayedBooks] = useState<Book[]>([]);
-  const [loading, setLoading] = useState(true);
   const [isFallback, setIsFallback] = useState(false);
   const [page, setPage] = useState(1);
   const [loadingMore, setLoadingMore] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
-    const fetchBooks = async () => {
-      try {
-        const res = await fetch(
-          "https://www.googleapis.com/books/v1/volumes?q=fiction&orderBy=newest&printType=books&maxResults=40"
-        );
-        const data = await res.json();
-
-        const currentMonth = new Date().getMonth();
-        const currentYear = new Date().getFullYear();
-
-        const filtered = (data.items || []).filter((item: Book) => {
-          const dateStr = item.volumeInfo.publishedDate;
-          if (!dateStr) return false;
-          const date = new Date(dateStr);
-          return (
-            date.getMonth() === currentMonth &&
-            date.getFullYear() === currentYear
-          );
-        });
-
-        if (filtered.length > 0) {
-          setAllBooks(filtered);
-        } else {
-          setAllBooks(data.items || []);
-          setIsFallback(true);
-        }
-      } catch (error) {
-        console.error("API Hatası:", error);
-      } finally {
-        setLoading(false);
-        if (onLoaded) onLoaded();
-      }
-    };
-
-    fetchBooks();
-  }, []);
+    setIsFallback(false);
+    if (!books || books.length === 0) {
+      setDisplayedBooks([]);
+      return;
+    }
+    setDisplayedBooks(books.slice(0, PAGE_SIZE));
+    const currentMonth = new Date().getMonth();
+    const currentYear = new Date().getFullYear();
+    const hasCurrentMonth = books.some((item: Book) => {
+      const dateStr = item.volumeInfo.publishedDate;
+      if (!dateStr) return false;
+      const date = new Date(dateStr);
+      return (
+        date.getMonth() === currentMonth && date.getFullYear() === currentYear
+      );
+    });
+    setIsFallback(!hasCurrentMonth);
+    setPage(1);
+  }, [books]);
 
   useEffect(() => {
-    const nextBooks = allBooks.slice(0, page * PAGE_SIZE);
-    setDisplayedBooks(nextBooks);
-  }, [allBooks, page]);
+    setDisplayedBooks(books.slice(0, page * PAGE_SIZE));
+  }, [books, page]);
 
   const loadMore = () => {
     if (loadingMore) return;
-    if (page * PAGE_SIZE >= allBooks.length) return;
-
+    if (page * PAGE_SIZE >= books.length) return;
     setLoadingMore(true);
     setTimeout(() => {
       setPage((prev) => prev + 1);
@@ -90,11 +72,21 @@ const BookOfThisMonth: React.FC<BookOfThisMonthProps> = ({ onLoaded }) => {
     }, 500);
   };
 
+  if (!books || books.length === 0) return null;
+
   return (
     <View style={styles.container}>
-      {isFallback && (
-        <Text style={styles.title}>Son Yayınlanan Kitaplar</Text>
-      )}
+      <View style={styles.headerRow}>
+        <Text style={styles.title}>
+          {isFallback ? "Son Yayınlanan Kitaplar" : "Ayın Kitapları"}
+        </Text>
+        <TouchableOpacity
+          style={styles.seeAllButton}
+          onPress={() => router.push("/AllBooksList/BooksofThisMonthAll")}
+        >
+          <Text style={styles.seeAllText}>Hepsini Gör</Text>
+        </TouchableOpacity>
+      </View>
       <FlatList
         data={displayedBooks}
         keyExtractor={(item) => item.id}
@@ -133,8 +125,15 @@ const BookOfThisMonth: React.FC<BookOfThisMonthProps> = ({ onLoaded }) => {
 
 const styles = StyleSheet.create({
   container: {
-    flex:1,
+    flex: 1,
     marginTop: 20,
+  },
+  headerRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginBottom: 4,
+    marginHorizontal: 8,
   },
   title: {
     paddingHorizontal: 16,
@@ -142,6 +141,17 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "bold",
     marginBottom: 16,
+  },
+  seeAllButton: {
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    borderRadius: 8,
+    backgroundColor: "#f2eee9",
+  },
+  seeAllText: {
+    color: "#6B4F27",
+    fontWeight: "bold",
+    fontSize: 13,
   },
 });
 

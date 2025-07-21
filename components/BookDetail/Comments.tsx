@@ -21,7 +21,7 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  View
+  View,
 } from "react-native";
 
 interface CommentsProps {
@@ -41,7 +41,7 @@ const Comments: React.FC<CommentsProps> = ({ bookId }) => {
   const [comment, setComment] = useState("");
   const [rating, setRating] = useState(0);
   const [comments, setComments] = useState<CommentItem[]>([]);
-  const [visibleCount, setVisibleCount] = useState(3); 
+  const [visibleCount, setVisibleCount] = useState(3);
   const { user } = useUser();
   const sendAnim = useRef(new Animated.Value(0)).current;
 
@@ -57,7 +57,7 @@ const Comments: React.FC<CommentsProps> = ({ bookId }) => {
           (doc) => ({ id: doc.id, ...doc.data() } as CommentItem)
         )
       );
-      setVisibleCount(3); 
+      setVisibleCount(3);
     });
     return unsubscribe;
   }, [bookId]);
@@ -67,8 +67,16 @@ const Comments: React.FC<CommentsProps> = ({ bookId }) => {
       return;
     }
     Animated.sequence([
-      Animated.timing(sendAnim, { toValue: 50, duration: 250, useNativeDriver: true }),
-      Animated.timing(sendAnim, { toValue: 0, duration: 250, useNativeDriver: true }),
+      Animated.timing(sendAnim, {
+        toValue: 100,
+        duration: 250,
+        useNativeDriver: true,
+      }),
+      Animated.timing(sendAnim, {
+        toValue: 0,
+        duration: 250,
+        useNativeDriver: true,
+      }),
     ]).start();
     try {
       await addDoc(collection(db, "comments"), {
@@ -93,31 +101,27 @@ const Comments: React.FC<CommentsProps> = ({ bookId }) => {
   };
 
   const handleDelete = async (commentId: string) => {
-    Alert.alert(
-      "Yorumu Sil",
-      "Yorumu silmek istediğinize emin misiniz?",
-      [
-        { text: "İptal", style: "cancel" },
-        {
-          text: "Sil",
-          style: "destructive",
-          onPress: async () => {
-            try {
-              await deleteDoc(doc(db, "comments", commentId));
-              setComments(prev => prev.filter(c => c.id !== commentId));
-            } catch (e) {
-              let errorMsg = "Bilinmeyen hata";
-              if (typeof e === "object" && e !== null && "message" in e) {
-                errorMsg = (e as any).message;
-              } else {
-                errorMsg = String(e);
-              }
-              Alert.alert("Yorum silinemedi", errorMsg);
+    Alert.alert("Yorumu Sil", "Yorumu silmek istediğinize emin misiniz?", [
+      { text: "İptal", style: "cancel" },
+      {
+        text: "Sil",
+        style: "destructive",
+        onPress: async () => {
+          try {
+            await deleteDoc(doc(db, "comments", commentId));
+            setComments((prev) => prev.filter((c) => c.id !== commentId));
+          } catch (e) {
+            let errorMsg = "Bilinmeyen hata";
+            if (typeof e === "object" && e !== null && "message" in e) {
+              errorMsg = (e as any).message;
+            } else {
+              errorMsg = String(e);
             }
+            Alert.alert("Yorum silinemedi", errorMsg);
           }
-        }
-      ]
-    );
+        },
+      },
+    ]);
   };
 
   return (
@@ -153,7 +157,7 @@ const Comments: React.FC<CommentsProps> = ({ bookId }) => {
         <Text>Puan:</Text>
         {[1, 2, 3, 4, 5].map((num) => (
           <TouchableOpacity key={num} onPress={() => setRating(num)}>
-            <Text style={rating === num ? styles.selectedStar : styles.star}>
+            <Text style={num <= rating ? styles.selectedStar : styles.star}>
               ★
             </Text>
           </TouchableOpacity>
@@ -164,7 +168,13 @@ const Comments: React.FC<CommentsProps> = ({ bookId }) => {
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <View style={styles.commentItem}>
-            <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-between",
+              }}
+            >
               <View style={{ flexDirection: "row", alignItems: "center" }}>
                 <Text style={styles.commentUser}>{item.userName}</Text>
                 <Text style={styles.commentDate}>
@@ -208,11 +218,19 @@ const Comments: React.FC<CommentsProps> = ({ bookId }) => {
         ListFooterComponent={
           comments.length > 5 ? (
             <TouchableOpacity
-              onPress={() => setVisibleCount(visibleCount === comments.length ? 5 : comments.length)}
-              style={{ alignItems: 'center', marginVertical: 12 }}
+              onPress={() =>
+                setVisibleCount(
+                  visibleCount === comments.length ? 5 : comments.length
+                )
+              }
+              style={{ alignItems: "center", marginVertical: 12 }}
             >
-              <Text style={{ color: '#6c584c', fontWeight: 'bold', fontSize: 16 }}>
-                {visibleCount === comments.length ? 'Daha az göster' : 'Daha fazla göster'}
+              <Text
+                style={{ color: "#6c584c", fontWeight: "bold", fontSize: 16 }}
+              >
+                {visibleCount === comments.length
+                  ? "Daha az göster"
+                  : "Daha fazla göster"}
               </Text>
             </TouchableOpacity>
           ) : null
@@ -225,12 +243,12 @@ const Comments: React.FC<CommentsProps> = ({ bookId }) => {
 const styles = StyleSheet.create({
   container: {
     padding: 12,
-    paddingHorizontal: 16,     // içeride yatay padding
+    paddingHorizontal: 16,
     backgroundColor: "#FFFBF9",
     borderRadius: 12,
     borderWidth: 1,
     borderColor: "#E0D8CF",
-    marginHorizontal: 16,     // dışarıdan kenar boşluğu
+    marginHorizontal: 16,
     marginTop: 12,
     marginBottom: 16,
     shadowColor: "#000",
@@ -238,7 +256,7 @@ const styles = StyleSheet.create({
     shadowRadius: 3,
     elevation: 2,
   },
-  
+
   inputRow: {
     flexDirection: "row",
     alignItems: "center",
@@ -305,6 +323,7 @@ const styles = StyleSheet.create({
   sendButton: {
     width: 22,
     height: 22,
+    marginLeft: 10,
     tintColor: "#6B4F27",
   },
   trashButton: {

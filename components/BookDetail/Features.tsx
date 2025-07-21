@@ -1,37 +1,46 @@
-import { Colors } from '@/constants/Colors';
-import React from 'react';
-import { Image, StyleSheet, Text, View } from 'react-native';
-import { useFavorites } from "@/components/FavoritesContext";
+import React from "react";
+import { Image, StyleSheet, Text, View } from "react-native";
 
-interface FeaturesProps {
-  volume: any;
+export interface FeaturesProps {
+  book: any;
+  favoriteCount: number;
 }
 
-const Features: React.FC<FeaturesProps> = ({ volume }) => {
-  const { favoritesCounts } = useFavorites();
+const Features: React.FC<FeaturesProps> = ({ book, favoriteCount }) => {
+  const volume = book?.volumeInfo || {};
 
-  if (!volume) return null;
-
-  const favoriteCount = favoritesCounts[volume.id] || 0;
+  if (!book) return null;
 
   return (
     <View style={styles.container}>
       <View style={styles.item}>
-        <Image source={require("@/assets/icons/calendar.png")} style={styles.icon} resizeMode="contain" />
+        <Image
+          source={require("@/assets/icons/calendar.png")}
+          style={styles.icon}
+          resizeMode="contain"
+        />
         <Text style={styles.text}>{volume.publishedDate}</Text>
       </View>
 
       <View style={styles.separator} />
 
       <View style={styles.item}>
-        <Image source={require("@/assets/icons/unchecked-bookmark.png")} style={styles.icon} resizeMode="contain" />
+        <Image
+          source={require("@/assets/icons/checked-bookmark.png")}
+          style={styles.icon}
+          resizeMode="contain"
+        />
         <Text style={styles.text}>{favoriteCount}</Text>
       </View>
 
       <View style={styles.separator} />
 
       <View style={styles.item}>
-        <Image source={require("@/assets/icons/world.png")} style={styles.icon} resizeMode="contain" />
+        <Image
+          source={require("@/assets/icons/world.png")}
+          style={styles.icon}
+          resizeMode="contain"
+        />
         <Text style={styles.text}>{volume.language?.toUpperCase()}</Text>
       </View>
     </View>
@@ -52,7 +61,7 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     paddingHorizontal: 12,
     marginHorizontal: 16,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOpacity: 0.04,
     shadowRadius: 2,
     elevation: 1,
@@ -65,7 +74,7 @@ const styles = StyleSheet.create({
     width: 16,
     height: 16,
     marginRight: 4,
-    tintColor: "#6B4F27", // daha soft kahverengi tonu
+    tintColor: "#6B4F27",
   },
   text: {
     fontSize: 13,

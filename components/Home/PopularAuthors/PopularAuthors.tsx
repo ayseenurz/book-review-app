@@ -1,40 +1,24 @@
 import { Colors } from "@/constants/Colors";
 import { router } from "expo-router";
-import React, { useEffect, useState } from "react";
-import { ActivityIndicator, FlatList, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import PopularAuthorsCard from "./PopularAuthorsCard";
 import { MotiView } from "moti";
-
+import React from "react";
+import {
+  FlatList,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import PopularAuthorsCard from "./PopularAuthorsCard";
 
 interface PopularAuthorsProps {
-  onLoaded?: () => void;
+  authors: string[];
 }
 
-const PopularAuthors: React.FC<PopularAuthorsProps> = ({ onLoaded }) => {
-  const [authors, setAuthors] = useState<string[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    fetch("https://www.googleapis.com/books/v1/volumes?q=fiction")
-      .then((res) => res.json())
-      .then((data) => {
-        const authorSet = new Set<string>();
-        data.items?.forEach((item: any) => {
-          item.volumeInfo?.authors?.forEach((author: string) => {
-            authorSet.add(author);
-          });
-        });
-        setAuthors(Array.from(authorSet).slice(0, 10));
-      })
-      .catch((error) => console.error("API hatası:", error))
-      .finally(() => {
-        setLoading(false);
-        if (onLoaded) onLoaded();
-      });
-  }, []);
-
-  
+const PopularAuthors: React.FC<PopularAuthorsProps> = ({ authors }) => {
   const colors = ["#a3917b", "#6c584c", "#c2b6a3", "#a89984", "#7a6f63"];
+
+  if (!authors || authors.length === 0) return null;
 
   return (
     <View style={styles.container}>
@@ -47,16 +31,23 @@ const PopularAuthors: React.FC<PopularAuthorsProps> = ({ onLoaded }) => {
           showsHorizontalScrollIndicator={false}
           renderItem={({ item, index }) => (
             <MotiView
-              from={{ opacity: 0, translateX: 20 }}   // sağdan sola gelsin
+              from={{ opacity: 0, translateX: 20 }}
               animate={{ opacity: 1, translateX: 0 }}
               transition={{
-                type: 'timing',
+                type: "timing",
                 duration: 500,
-                delay: index * 100, // sıralı animasyon
+                delay: index * 100,
               }}
             >
-              <TouchableOpacity onPress={() => router.push(`/author-detail/${encodeURIComponent(item)}`)}>
-                <PopularAuthorsCard name={item} backgroundColor={colors[index % colors.length]} />
+              <TouchableOpacity
+                onPress={() =>
+                  router.push(`/author-detail/${encodeURIComponent(item)}`)
+                }
+              >
+                <PopularAuthorsCard
+                  name={item}
+                  backgroundColor={colors[index % colors.length]}
+                />
               </TouchableOpacity>
             </MotiView>
           )}
@@ -67,9 +58,9 @@ const PopularAuthors: React.FC<PopularAuthorsProps> = ({ onLoaded }) => {
 };
 
 const styles = StyleSheet.create({
-  container:{
-    flex:1,
-    marginTop:8
+  container: {
+    flex: 1,
+    marginTop: 8,
   },
   title: {
     alignContent: "flex-start",

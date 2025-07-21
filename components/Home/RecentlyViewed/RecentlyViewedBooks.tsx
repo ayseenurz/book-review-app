@@ -19,7 +19,9 @@ const RecentlyViewedBooks = () => {
     Promise.all(
       recentlyViewed.map(async (id) => {
         try {
-          const res = await fetch(`https://www.googleapis.com/books/v1/volumes/${id}`);
+          const res = await fetch(
+            `https://www.googleapis.com/books/v1/volumes/${id}`
+          );
           const data = await res.json();
           return {
             id,
@@ -42,7 +44,7 @@ const RecentlyViewedBooks = () => {
   }
 
   if (!books.length) {
-    return null; // Hiç kitap yoksa bu bölümü göstermeyebilirsin
+    return null; // Hiç kitap yoksa bu bölümü gösterme
   }
 
   return (
@@ -51,10 +53,8 @@ const RecentlyViewedBooks = () => {
       <FlatList
         data={books.filter(Boolean)}
         horizontal
-        keyExtractor={item => item.id}
-        renderItem={({ item }) => (
-          <RecentlyViewedBooksCard book={item} />
-        )}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => <RecentlyViewedBooksCard book={item} />}
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={{ paddingHorizontal: 16 }}
       />
@@ -66,8 +66,8 @@ export default RecentlyViewedBooks;
 
 const styles = StyleSheet.create({
   container: {
-    flex:1,
-    marginTop: 30,
+    flex: 1,
+    marginTop: 20,
   },
   title: {
     fontSize: 20,

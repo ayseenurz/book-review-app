@@ -96,21 +96,18 @@ const Explore = () => {
     return () => controller.abort();
   }, [inputValue, setResults]);
 
-  // Eski "Ara" butonu geri geldi, ama input değiştikçe de arama yapılır
   const handleSearch = () => {
     setInputValue(search);
   };
 
-  // her input değişiminde arama tetiklenecek şekilde inputValue güncellenir
   useEffect(() => {
     setInputValue(search);
   }, [search]);
 
-  // tab değişiminde veya sayfa odaklandığında arama sonuçlarını temizle
   useFocusEffect(
     React.useCallback(() => {
       return () => {
-        // Sadece arama kutusu boşsa sonuçları temizle
+        // Sadece arama kutusu boşsa 
         if (!search.trim() && !inputValue.trim()) {
           setResults([]);
         }

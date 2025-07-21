@@ -163,7 +163,7 @@ const CategoryListScreen = () => {
           renderItem={({ item }) => (
             <BookListCard book={item} fullWidth cardHeight={130} horizontal />
           )}
-          contentContainerStyle={{ flexGrow: 1, justifyContent: 'center' }}
+          contentContainerStyle={{ flexGrow: 1, justifyContent: "center" }}
           ListEmptyComponent={
             <View
               style={{
@@ -174,9 +174,13 @@ const CategoryListScreen = () => {
             >
               <Image
                 source={require("../../assets/icons/no-results.png")}
-                style={{ width: 50, height: 50, opacity:0.5 }}
+                style={{ width: 50, height: 50, opacity: 0.5 }}
               />
-              <Text style={{ color: Colors.light.koyuKahverengi, marginTop: 12 }}>Bu kategoride kitap bulunamadı.</Text>
+              <Text
+                style={{ color: Colors.light.koyuKahverengi, marginTop: 12 }}
+              >
+                Bu kategoride kitap bulunamadı.
+              </Text>
             </View>
           }
         />

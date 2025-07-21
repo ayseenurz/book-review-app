@@ -3,10 +3,13 @@ import { StyleSheet, Text, View } from "react-native";
 
 interface AuthorCardProps {
   name: string;
-  backgroundColor?: string; 
+  backgroundColor?: string;
 }
 
-const PopularAuthorsCard: React.FC<AuthorCardProps> = ({ name, backgroundColor = "#f5f5f5" }) => {
+const PopularAuthorsCard: React.FC<AuthorCardProps> = ({
+  name,
+  backgroundColor = "#f5f5f5",
+}) => {
   return (
     <View style={[styles.card, { backgroundColor }]}>
       <Text style={styles.text}>{name}</Text>

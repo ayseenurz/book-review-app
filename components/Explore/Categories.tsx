@@ -5,13 +5,22 @@ import CategoryCard from "./CategoryCard";
 
 const categories = [
   { genre: "Çocuk", image: require("@/assets/icons/child.png") },
-  { genre: "İş Dünyası ve Ekonomi", image: require("@/assets/icons/economic.png") },
-  { genre: "Sosyal Bilimler", image: require("@/assets/icons/social-science.png") },
+  {
+    genre: "İş Dünyası ve Ekonomi",
+    image: require("@/assets/icons/economic.png"),
+  },
+  {
+    genre: "Sosyal Bilimler",
+    image: require("@/assets/icons/social-science.png"),
+  },
   { genre: "Tarih", image: require("@/assets/icons/history.png") },
   { genre: "Biyografi", image: require("@/assets/icons/biography.png") },
   { genre: "Din", image: require("@/assets/icons/religion.png") },
   { genre: "Bilim Kurgu", image: require("@/assets/icons/scifi.png") },
-  { genre: "Teknoloji ve Mühendislik", image: require("@/assets/icons/technology.png") },
+  {
+    genre: "Teknoloji ve Mühendislik",
+    image: require("@/assets/icons/technology.png"),
+  },
   { genre: "Fantastik", image: require("@/assets/icons/fantasy.png") },
   { genre: "Kişisel Gelişim", image: require("@/assets/icons/help.png") },
 ];
@@ -19,10 +28,8 @@ const categories = [
 export default function Categories() {
   const router = useRouter();
   return (
-      <View style={styles.container}>
-      <Text style={styles.title}>
-        Kategoriler
-      </Text>
+    <View style={styles.container}>
+      <Text style={styles.title}>Kategoriler</Text>
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
@@ -45,7 +52,7 @@ export default function Categories() {
             style={{ marginRight: 4 }}
             index={idx}
             animationAxis="x"
-            hideGenreName // sadece icon göstermek için
+            hideGenreName
           />
         ))}
       </ScrollView>
@@ -59,7 +66,7 @@ const styles = StyleSheet.create({
     marginTop: 22,
   },
   title: {
-    fontSize:20,
+    fontSize: 20,
     fontWeight: "bold",
     marginBottom: 12,
     marginLeft: 16,

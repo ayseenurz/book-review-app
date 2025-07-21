@@ -86,7 +86,7 @@ export default Details;
 
 const styles = StyleSheet.create({
   detailsContainer: {
-    paddingHorizontal:16,
+    paddingHorizontal: 16,
     marginTop: 20,
     width: "100%",
     marginBottom: 20,

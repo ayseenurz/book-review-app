@@ -1,3 +1,4 @@
+import { router } from "expo-router";
 import React, { useEffect, useState } from "react";
 import {
   ActivityIndicator,
@@ -8,7 +9,6 @@ import {
   View,
 } from "react-native";
 import BookListCard from "./BookListCard";
-import { router } from "expo-router";
 
 interface Book {
   id: string;
@@ -22,7 +22,12 @@ interface Book {
   };
 }
 
-const Books = ({ authorName }: { authorName: string }) => {
+interface BooksProps {
+  author: any;
+}
+
+const Books = ({ author }: BooksProps) => {
+  const authorName = author?.name || "";
   const [books, setBooks] = useState<Book[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -85,7 +90,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontWeight: "bold",
-    marginHorizontal:16,
+    marginHorizontal: 16,
     fontSize: 22,
     color: "#6c584c",
     marginBottom: 12,
@@ -95,7 +100,7 @@ const styles = StyleSheet.create({
   },
   booksListWrapper: {
     width: "100%",
-    paddingLeft:16,
+    paddingLeft: 16,
   },
   bookText: {
     fontSize: 14,

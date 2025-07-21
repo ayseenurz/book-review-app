@@ -1,22 +1,25 @@
-import React, { useState } from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import React, { useState } from "react";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
-interface DescriptionProps {
-  description: string;
+export interface DescriptionProps {
+  book: any;
 }
 
 const MAX_LINES = 4;
 
-const Description: React.FC<DescriptionProps> = ({ description = "" }) => {
+const Description: React.FC<DescriptionProps> = ({ book }) => {
+  const description = book?.volumeInfo?.description || "";
   const [expanded, setExpanded] = useState(false);
 
   // HTML taglerini temizlemek için
-  const stripHtmlTags = (text: string) => text.replace(/<[^>]*>/g, '');
+  const stripHtmlTags = (text: string) => text.replace(/<[^>]*>/g, "");
 
   const safeDescription = description || "";
-  const shouldShowReadMore = safeDescription.split(' ').length > 20 || safeDescription.length > 120;
+  const shouldShowReadMore =
+    safeDescription.split(" ").length > 20 || safeDescription.length > 120;
 
-  const isEmpty = !safeDescription || stripHtmlTags(safeDescription).trim() === "";
+  const isEmpty =
+    !safeDescription || stripHtmlTags(safeDescription).trim() === "";
 
   return (
     <View style={styles.descBox}>
@@ -36,7 +39,7 @@ const Description: React.FC<DescriptionProps> = ({ description = "" }) => {
           {shouldShowReadMore && (
             <TouchableOpacity onPress={() => setExpanded(!expanded)}>
               <Text style={styles.readMore}>
-                {expanded ? 'Daha az göster' : 'Devamını oku'}
+                {expanded ? "Daha az göster" : "Devamını oku"}
               </Text>
             </TouchableOpacity>
           )}

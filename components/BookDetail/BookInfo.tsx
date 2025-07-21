@@ -1,12 +1,13 @@
 import React from "react";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
-interface BookInfoProps {
-  volume: any;
+export interface BookInfoProps {
+  book: any;
   router: any;
 }
 
-const BookInfo: React.FC<BookInfoProps> = ({ volume, router }) => {
+const BookInfo: React.FC<BookInfoProps> = ({ book, router }) => {
+  const volume = book?.volumeInfo || {};
   return (
     <View style={styles.bookInfoContainer}>
       {volume.imageLinks?.thumbnail ? (
@@ -63,14 +64,14 @@ const styles = StyleSheet.create({
     paddingVertical: 14,
     paddingHorizontal: 10,
     borderBottomWidth: 2,
-    borderBottomColor: "#E0D8CF", // soft kahve tonunda ince alt çizgi
+    borderBottomColor: "#E0D8CF",
   },
   bookImage: {
     width: 120,
     height: 180,
     borderRadius: 10,
     marginBottom: 12,
-    backgroundColor: "#f2eee9", // kapak yoksa yumuşak zemin
+    backgroundColor: "#f2eee9",
   },
   bookTitle: {
     fontSize: 20,
@@ -86,6 +87,4 @@ const styles = StyleSheet.create({
   },
 });
 
-
-
-export default BookInfo; 
+export default BookInfo;

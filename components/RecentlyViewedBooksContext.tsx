@@ -1,4 +1,4 @@
-import React, { createContext, ReactNode, useContext, useState } from 'react';
+import React, { createContext, ReactNode, useContext, useState } from "react";
 
 interface RecentlyViewedBooksContextType {
   recentlyViewed: string[];
@@ -6,14 +6,20 @@ interface RecentlyViewedBooksContextType {
   clearRecentlyViewed: () => void;
 }
 
-const RecentlyViewedBooksContext = createContext<RecentlyViewedBooksContextType | undefined>(undefined);
+const RecentlyViewedBooksContext = createContext<
+  RecentlyViewedBooksContextType | undefined
+>(undefined);
 
-export const RecentlyViewedBooksProvider = ({ children }: { children: ReactNode }) => {
+export const RecentlyViewedBooksProvider = ({
+  children,
+}: {
+  children: ReactNode;
+}) => {
   const [recentlyViewed, setRecentlyViewed] = useState<string[]>([]);
 
   const addRecentlyViewed = (bookId: string) => {
-    setRecentlyViewed(prev => {
-      const filtered = prev.filter(id => id !== bookId);
+    setRecentlyViewed((prev) => {
+      const filtered = prev.filter((id) => id !== bookId);
       const updated = [bookId, ...filtered];
       return updated.slice(0, 10);
     });
@@ -22,7 +28,9 @@ export const RecentlyViewedBooksProvider = ({ children }: { children: ReactNode 
   const clearRecentlyViewed = () => setRecentlyViewed([]);
 
   return (
-    <RecentlyViewedBooksContext.Provider value={{ recentlyViewed, addRecentlyViewed, clearRecentlyViewed }}>
+    <RecentlyViewedBooksContext.Provider
+      value={{ recentlyViewed, addRecentlyViewed, clearRecentlyViewed }}
+    >
       {children}
     </RecentlyViewedBooksContext.Provider>
   );
@@ -31,7 +39,9 @@ export const RecentlyViewedBooksProvider = ({ children }: { children: ReactNode 
 export const useRecentlyViewedBooks = () => {
   const context = useContext(RecentlyViewedBooksContext);
   if (!context) {
-    throw new Error('useRecentlyViewedBooks must be used within a RecentlyViewedBooksProvider');
+    throw new Error(
+      "useRecentlyViewedBooks must be used within a RecentlyViewedBooksProvider"
+    );
   }
   return context;
-}; 
+};

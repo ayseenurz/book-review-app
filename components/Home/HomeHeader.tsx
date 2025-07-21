@@ -11,7 +11,9 @@ const Header = () => {
         <Text style={styles.greetingText}>
           Hoşgeldin{user?.firstName ? `, ${user.firstName}` : ""}
         </Text>
-        <Text style={styles.subText}>Bugün hangi kitabı keşfetmek istersin?</Text>
+        <Text style={styles.subText}>
+          Bugün hangi kitabı keşfetmek istersin?
+        </Text>
       </View>
       <View style={styles.appNameBox}>
         <Text style={styles.appNameTop}>Kitap</Text>

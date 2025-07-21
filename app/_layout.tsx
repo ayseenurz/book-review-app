@@ -73,7 +73,10 @@ export default function RootLayout() {
                   </Stack>
                   <StatusBar style="auto" />
 
-                  <CustomToast visible={toastVisible} message="İşlem başarılı!" />
+                  <CustomToast
+                    visible={toastVisible}
+                    message="İşlem başarılı!"
+                  />
                 </SignedIn>
                 <SignedOut>
                   <LoginScreen />

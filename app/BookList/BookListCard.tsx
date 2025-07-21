@@ -1,30 +1,30 @@
 import { useRouter } from "expo-router";
 import React from "react";
 import {
-    Image,
-    SafeAreaView,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View,
+  Image,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
 
 type BookListCardProps = {
   book: any;
   showBookmark?: boolean;
   onRemoveFavorite?: (bookId: string) => void;
-  fullWidth?: boolean; // yeni prop
-  horizontal?: boolean; // sadece explore için
-  cardHeight?: number; // yeni prop
+  fullWidth?: boolean;
+  horizontal?: boolean;
+  cardHeight?: number;
 };
 
-const MAX_AUTHORS_LENGTH = 38; // karakter limiti, kart genişliğine göre ayarlanabilir
+const MAX_AUTHORS_LENGTH = 38;
 
 function getTruncatedAuthors(authors: string[]): string {
   if (!authors || authors.length === 0) return "";
   const joined = authors.join(", ");
   if (joined.length <= MAX_AUTHORS_LENGTH) return joined;
-  // Sığmıyorsa, tek tek ekle, limiti aşınca üç nokta koy
+
   let result = "";
   for (let i = 0; i < authors.length; i++) {
     const next = result ? result + ", " + authors[i] : authors[i];
@@ -42,9 +42,9 @@ const BookListCard: React.FC<BookListCardProps> = ({
   book,
   showBookmark = false,
   onRemoveFavorite,
-  fullWidth = false, // default false
-  horizontal = false, // default false
-  cardHeight, // yeni prop
+  fullWidth = false,
+  horizontal = false,
+  cardHeight,
 }) => {
   const router = useRouter();
   const volume = book.volumeInfo || book;
@@ -68,7 +68,7 @@ const BookListCard: React.FC<BookListCardProps> = ({
             styles.card,
             fullWidth && styles.cardFullWidth,
             horizontal && styles.cardHorizontal,
-            cardHeight ? { height: cardHeight } : {}, // yeni satır
+            cardHeight ? { height: cardHeight } : {},
           ]}
           onPress={() => router.push(`/book-detail/${book.id}`)}
         >
@@ -83,7 +83,11 @@ const BookListCard: React.FC<BookListCardProps> = ({
               {volume.title}
             </Text>
             {volume.authors && (
-              <Text style={styles.authors} numberOfLines={1} ellipsizeMode="tail">
+              <Text
+                style={styles.authors}
+                numberOfLines={1}
+                ellipsizeMode="tail"
+              >
                 {getTruncatedAuthors(volume.authors)}
               </Text>
             )}

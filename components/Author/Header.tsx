@@ -16,10 +16,7 @@ const Header = ({ animatedHeight, imageUrl }: Props) => (
         ? { uri: imageUrl }
         : require("../../assets/icons/author-placeholder.png")
     }
-    style={[
-      styles.authorImage,
-      { height: animatedHeight, width }
-    ]}
+    style={[styles.authorImage, { height: animatedHeight, width }]}
     resizeMode="cover"
   />
 );
@@ -34,7 +31,9 @@ const styles = StyleSheet.create({
     zIndex: 1,
     borderBottomLeftRadius: 24,
     borderBottomRightRadius: 24,
-    borderWidth: 1,
+    borderBottomWidth: 4,
+    borderLeftWidth: 3,
+    borderRightWidth: 3,
     borderColor: Colors.light.griKahve,
     borderStyle: "solid",
   },
