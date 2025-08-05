@@ -14,9 +14,9 @@ import {
   TouchableWithoutFeedback,
   View,
 } from "react-native";
+import BookListCard from "../../components/Explore/BookListCard";
 import CategoryCard from "../../components/Explore/CategoryCard";
 import { useSearchResults } from "../../components/SearchResultsContext";
-import BookListCard from "../BookList/BookListCard";
 
 const Explore = () => {
   const router = useRouter();

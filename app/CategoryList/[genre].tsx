@@ -11,7 +11,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import BookListCard from "../BookList/BookListCard";
+import BookListCard from "../../components/Explore/BookListCard";
 
 const CATEGORY_KEYWORDS: Record<string, string[]> = {
   Fantastik: [

@@ -7,8 +7,8 @@ import {
   Text,
   View,
 } from "react-native";
+import BookListCard from "../../components/Explore/BookListCard";
 import { useSearchResults } from "../../components/SearchResultsContext";
-import BookListCard from "../BookList/BookListCard";
 
 const Search = () => {
   const params = useLocalSearchParams();
