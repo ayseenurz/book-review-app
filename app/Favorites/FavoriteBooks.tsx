@@ -9,7 +9,7 @@ import { collection, deleteDoc, doc, getDocs } from "firebase/firestore";
 import { MotiView } from "moti";
 import React, { useCallback, useEffect, useState } from "react";
 import { FlatList, SafeAreaView, StyleSheet, Text, View } from "react-native";
-import BookListCard from "../BookList/BookListCard";
+import BookListCard from "../../components/Explore/BookListCard";
 
 const FavoriteBooks = () => {
   const { isLoaded, isSignedIn, user } = useUser();

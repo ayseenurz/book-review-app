@@ -13,7 +13,7 @@ import {
   Text,
   View,
 } from "react-native";
-import CommentListCard from "./CommentListCard";
+import CommentListCard from "../../components/BookDetail/CommentListCard";
 
 interface CommentListProps {
   userId: string;
